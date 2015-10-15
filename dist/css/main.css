@@ -170,7 +170,8 @@ section
 section:last-child
 {
     padding-bottom: 150px;
-    font-size: 1.2vmax;
+    font-size: 3.4vmin;
+    /*font-size: 1.2vmax;*/
 }
 
 section > div
