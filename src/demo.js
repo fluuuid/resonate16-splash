@@ -89,7 +89,7 @@ class Demo {
     let vmax = Math.max(window.innerWidth, window.innerHeight);
     let vmin = Math.min(window.innerWidth, window.innerHeight);
 
-    let boxSize = (vmax / vmin) * 25 >> 0;
+    let boxSize = (vmax / vmin) * 22 >> 0;
     let resX = UtilsP.round(vmax / boxSize);
     let offset = (boxSize + (boxSize * .1))
     let totalWidth = offset * resX / 2;
@@ -147,7 +147,7 @@ class Demo {
             // TweenMax.to(lineBoxes.material, .3, {overwrite: 0, opacity:  ? 1 : 0, onUpdate : function(a){ a.needsUpdate = true; }, onUpdateParams: [lineBoxes.material]});
         }
 
-        if((howManyActive.length / 4) >> 0 < 15)
+        if((howManyActive.length / 4) >> 0 < 5)
         {
           this.world.init();
         }
