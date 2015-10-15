@@ -63,14 +63,25 @@ header
     height: 100vh;
 }
 
-header > img.logo 
+header div.container
 {
-    width: 50vw;
     position: absolute;
     top: 50%;
+    text-align: center;
     left: 50%;
     transform: translate(-50%, -50%);
     -webkit-transform: translate(-50%, -50%);
+}
+
+header div.container > span
+{
+    font-size: 2.8vmin;
+}
+
+header div.container > img.logo 
+{
+    width: 50vw;
+    padding-bottom: 5vh;
 }
 
 header > img.arrow

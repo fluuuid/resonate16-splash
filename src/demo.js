@@ -35,6 +35,7 @@ class Demo {
     this.stats = new Stats(); 
     this.stats.domElement.style.position = 'absolute';
     this.stats.domElement.style.top = 0;
+    this.stats.domElement.style.display = 'none';
     document.body.appendChild(this.stats.domElement);
   }
 
@@ -85,8 +86,11 @@ class Demo {
   {
     this.removeAll();
 
-    let boxSize = (window.innerWidth / window.innerHeight) * 20 >> 0;
-    let resX = UtilsP.round(window.innerWidth / boxSize);
+    let vmax = Math.max(window.innerWidth, window.innerHeight);
+    let vmin = Math.min(window.innerWidth, window.innerHeight);
+
+    let boxSize = (vmax / vmin) * 25 >> 0;
+    let resX = UtilsP.round(vmax / boxSize);
     let offset = (boxSize + (boxSize * .1))
     let totalWidth = offset * resX / 2;
 
