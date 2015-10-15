@@ -86,7 +86,7 @@ class Demo {
   {
     this.removeAll();
 
-    let boxSize = window.innerWidth / 70 >> 0;
+    let boxSize = window.innerWidth / 100 >> 0;
     let resX = UtilsP.round(window.innerWidth / boxSize);
     let offset = (boxSize + (boxSize * .1))
     let totalWidth = offset * resX / 2;
