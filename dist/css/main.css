@@ -8,7 +8,7 @@ html, body
     background-color: #c0c0c0;
     color: white;
     font-family: NeuzeitSLT-Book;
-    font-size: 1.2rem;
+    font-size: 3.2vmin;
     text-rendering: optimizeLegibility !important;
     -webkit-font-smoothing: antialiased !important;
     -moz-osx-font-smoothing: grayscale;
@@ -19,16 +19,16 @@ html, body
 
 main
 {
-    max-width: 960px;
+    max-width: 80vw;
     margin: 0 auto;
 }
 
-@media only screen and (max-width: 700px) {
+/*@media only screen and (max-width: 700px) {
     main
     {
         max-width: 80vw;
     }
-}
+}*/
 
 .mobile
 {
@@ -38,9 +38,9 @@ main
 h1
 {
     font-family: NeuzeitSLT-Book;
-    letter-spacing: 1.3px;
-    line-height: 2.7rem;
-    font-size: 1.8rem;
+    line-height: 8.5vmin;
+    font-size: 6.2vmin;
+    /*font-size: 3.8vw;*/
     font-weight: lighter;
     padding: 0;
     margin: 0;
@@ -49,9 +49,9 @@ h1
 h2
 {
     font-family: NeuzeitSLT-Book;
-    letter-spacing: 1.3px;
-    line-height: 1.8rem;
-    font-size: 1.2rem;
+    line-height: 6.5vmin;
+    font-size: 4.2vmin;
+
     font-weight: lighter;
     padding: 0;
     margin: 0;
@@ -81,6 +81,25 @@ header > img.arrow
     left: 50%;
     transform: translateX(-50%);
     -webkit-transform: translateX(-50%);
+
+    -webkit-animation: arrow-bottom 1.3s infinite ease-in-out;
+          animation: arrow-bottom 1.3s infinite ease-in-out; 
+}
+
+@-webkit-keyframes arrow-bottom {
+  0%, 100% {
+    bottom: 10px;
+  } 50% {
+    bottom: 20px;
+  }
+}
+
+@keyframes arrow-bottom {
+  0%, 100% {
+    bottom: 10px;
+  } 50% {
+    bottom: 20px;
+  }
 }
 
 h1.header
@@ -103,7 +122,7 @@ hr
 }
 
 p {
-    font-size: 1.2rem;
+    font-size: 3.8vmin;
 }
 
 a
@@ -140,7 +159,7 @@ section
 section:last-child
 {
     padding-bottom: 150px;
-    font-size: 1rem;
+    font-size: 1.2vmax;
 }
 
 section > div
@@ -159,13 +178,11 @@ section > div
 
 section > div:first-child { padding-right: 17px; }
 section > div:last-child { 
-    padding-left: 17px; 
-    color: #62318d;
+    padding-left: 5vw; 
+    /*color: #62318d;*/
 }
 
 @media only screen and (max-width: 700px) {
-
-    h1 {font-size: 1.5rem;}
 
     h1.header { padding: 100px 0 0 0;}
 
@@ -188,4 +205,9 @@ section > div:last-child {
         height: 3px;
         background-color: #62318d;
     }
+}
+
+.purple
+{
+    color: #62318d;
 }
