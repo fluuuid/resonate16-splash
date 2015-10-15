@@ -147,7 +147,7 @@ class Demo {
             // TweenMax.to(lineBoxes.material, .3, {overwrite: 0, opacity:  ? 1 : 0, onUpdate : function(a){ a.needsUpdate = true; }, onUpdateParams: [lineBoxes.material]});
         }
 
-        if((howManyActive.length / 4) >> 0 < 5)
+        if((howManyActive.length / 4) >> 0 < 6)
         {
           this.world.init();
         }
