@@ -66,8 +66,8 @@ h2
     font-family: NeuzeitSLT-Book;
     /*line-height: 6.5rem;*/
 
-    font-size: 36px;
-    font-size: 1.8rem;
+    font-size: 28px;
+    font-size: 1.4rem;
 
     font-weight: lighter;
     padding: 0;
@@ -150,6 +150,11 @@ hr.less-padding
     margin: 8vh 0 9vh;   
 }
 
+hr.last-hr
+{
+    background-color: transparent;
+}
+
 a
 {
     color: #62318d;
@@ -219,6 +224,11 @@ section.tickets > div.grid > div > p.old-price
     text-decoration: line-through;   
 }
 
+section.tickets > div.grid > div > p.full-price
+{
+    color: #62318d;
+}
+
 section.tickets > div.grid > div > h3
 {
     font-size: 1.8rem;
@@ -246,13 +256,16 @@ section.tickets > div.grid > div > a:hover
 
 section.tickets > div.grid > div
 {
-    font-size: .75rem
-    flex-basis: 33%;
+    font-size: .75rem;
+    width: 24vw;
+    flex-basis: auto;
+    flex-grow: 1;
 }
 
 section.tickets > div.grid > div.gutter
 {
     min-width: 3vw;
+    max-width: 3vw;
 }
 
 section > div

@@ -7,7 +7,7 @@ import TweenMax from 'gsap';
 // const OrbitControls = require('three-orbit-controls')(THREE);
 const GoL = require('gof-gpu');
 
-class Demo {
+class InteractiveLayer {
   constructor(args) 
   {
     this.startStats();
@@ -177,4 +177,4 @@ class Demo {
   }
 }
 
-export default Demo;
+export default InteractiveLayer;
