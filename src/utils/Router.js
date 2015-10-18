@@ -1,26 +1,23 @@
 import page from 'page';
 
 class Router  {
-  constructor() {
 
-    this.getSectionTop();
-    page();
-
-  }
-
-  getSectionTop()
+  start()
   {
-    this.sections = {};
-    let s = document.querySelectorAll('[data-section]');
-    for (var i = 0; i < s.length; i++) {
-        let el = s[i];
-        this.sections[el.dataset.section] = {el: el};
-        page("/" + el.dataset.section, this.pageHandler.bind(this));
-    };
+    page.base(window.location.port == "" ? "/dist" : "");
+    page("/", this.pageHandler.bind(this));
+    page(this.pageHandler.bind(this));
+    page();
   }
 
   pageHandler(e)
   {
+    if(e.path == '/')
+    {
+        window.APP.scroller.scrollTo(0);
+        return;
+    }
+
     let type = window.innerWidth < 700 ? "mobile" : "desktop";
     let path = e.path.split('/').join("");
     let el = document.querySelector('[data-section="'+path+'"]:not([data-type="'+type+'"])')

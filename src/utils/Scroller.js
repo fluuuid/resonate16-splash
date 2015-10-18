@@ -21,7 +21,7 @@ class Scroller  {
         scrollTo: {x: 0, y: Y},
         ease: Power2.easeInOut,
         onComplete: () => {
-            console.log('onScrollComplete');
+            // console.log('onScrollComplete');
         }
     });
   }

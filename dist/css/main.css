@@ -105,6 +105,13 @@ nav > div > a:hover
     border-bottom: 1px solid white;
 }
 
+nav > div > a.header
+{
+    font-size: 16px;
+    font-size: .8rem;
+    margin-right: 0;
+}
+
 header
 {
     background-color: black;
