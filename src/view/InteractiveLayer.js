@@ -10,6 +10,8 @@ const GoL = require('gof-gpu');
 class InteractiveLayer {
   constructor(args) 
   {
+    window.onresize = this.onResize.bind(this);
+
     this.startStats();
     this.startGUI();
 

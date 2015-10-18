@@ -74,6 +74,38 @@ h2
     margin: 0;
 }
 
+nav
+{
+    font-size: 16px;
+    font-size: .8rem;
+    background-color: #62318d;
+    width: 100%;
+    position: fixed;
+    display: -webkit-flex;
+    display: flex;
+}
+
+nav > div
+{
+    padding: 10px;
+    width: 50%;
+}
+
+nav > div:last-child { text-align: right; }
+
+nav > div > a
+{
+    color: white;
+    font-size: 14px;
+    font-size: .7rem;
+    display: inline;
+    margin-right: 10px;
+}
+nav > div > a:hover
+{
+    border-bottom: 1px solid white;
+}
+
 header
 {
     background-color: black;
