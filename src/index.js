@@ -3,7 +3,15 @@ import Router           from './utils/Router';
 import Scroller         from './utils/Scroller';
 import Menu             from './view/Menu';
 
-const scroller         = new Scroller();
-const menu             = new Menu();
-const router           = new Router();
-const interactive      = new InteractiveLayer();
+class App
+{
+    constructor()
+    {
+        this.scroller    = new Scroller();        
+        this.menu        = new Menu();            
+        this.interactive = new InteractiveLayer();
+        this.router      = new Router();        
+    }
+}
+
+window.APP = new App();

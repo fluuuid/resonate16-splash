@@ -44,10 +44,8 @@ main
     }
 }
 
-.mobile
-{
-    display: none;
-}
+*[data-type="desktop"] { display: -webkit-flex; display: flex; }
+*[data-type="mobile"] { display: none; }
 
 h1
 {
@@ -83,6 +81,7 @@ nav
     position: fixed;
     display: -webkit-flex;
     display: flex;
+    z-index: 2;
 }
 
 nav > div
@@ -245,6 +244,12 @@ section.tickets > div.grid
     }
 }
 
+@media only screen and (max-width: 700px) {
+    section.tickets > div.grid {
+        flex-direction: column;
+    }
+}
+
 section.tickets > div.grid > div > h1
 {
     color: #62318d;
@@ -300,9 +305,31 @@ section.tickets > div.grid > div.gutter
     max-width: 3vw;
 }
 
+@media only screen and (max-width: 700px) {
+    section.tickets > div.grid > div    {
+        font-size: .75rem;
+        width: 100%;
+        flex-basis: auto;
+        flex-grow: 1;
+    }
+
+    section.tickets > div.grid > div.gutter
+    {
+        min-height: 3vw;
+        max-height: 3vw;       
+    }
+}
+
 section > div
 {
     width: 50%;
+}
+
+@media only screen and (max-width: 700px) {
+    section > div
+    {
+        width: 100%;
+    }    
 }
 
 
@@ -331,8 +358,8 @@ section > div:last-child {
     section.mobile.purple > div { color: #62318d !important; }
     section.mobile.white > div { color: white !important; }
 
-    .desktop { display: none; }
-    .mobile { display: block; }
+    *[data-type="desktop"] { display: none; }
+    *[data-type="mobile"] { display: -webkit-flex; display: flex; }
 
     hr
     {

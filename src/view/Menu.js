@@ -6,7 +6,7 @@ class Menu  {
     this.el = document.querySelector('nav');
     this.buttons = this.el.querySelectorAll('a');
 
-    console.log(this.buttons);
+    // console.log(this.buttons);
 
     for (var i = 0; i < this.buttons.length; i++) {
         eve.on(this.buttons[i], 'click', this.onClickMenu.bind(this));
@@ -15,8 +15,8 @@ class Menu  {
 
   onClickMenu(e)
   {
-    console.log(e);
-    e.preventDefault();
+    // console.log(e);
+    // e.preventDefault();
   }
 }
 
