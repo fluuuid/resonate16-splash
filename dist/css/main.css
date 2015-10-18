@@ -129,6 +129,21 @@ header div.container
     width: 100%;
 }
 
+header div.container > img
+{
+    height: 44vh;
+}
+
+header div.container > p > a
+{
+    color: white;
+}
+
+header div.container > p > a:hover
+{
+    border-bottom: 1px solid white;
+}
+
 header div.container > img.logo 
 {
     width: 50vw;
