@@ -50,8 +50,6 @@ main
 h1
 {
     font-family: NeuzeitSLT-Book;
-    /*line-height: 8.5rem;*/
-
     font-size: 1.8rem;
 
     font-weight: lighter;
@@ -246,10 +244,41 @@ section.tickets
     display: block;
 }
 
+section.contact
+{
+    display: block;
+}
+
 section.tickets > h1
 {
     padding-bottom: 3vw;
 }
+
+section.contact > h1
+{
+    padding-bottom: 3vw;
+}
+
+section.contact > form > input
+{
+    color: black;
+    border: 0;
+    font-size: .75rem;
+}
+
+section.contact > form > input[type="email"]
+{
+    padding: 5px;
+}
+
+section.contact > form > input[type="submit"]
+{
+    background-color: #62318d;
+    color: white;
+    padding: 5px;
+    margin-left: 10px;
+}
+
 
 section.tickets > div.grid
 {
