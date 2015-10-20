@@ -39,6 +39,12 @@
 
     <link rel="stylesheet" type="text/css" href="css/normalise.min.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
+    <style type="text/css">
+    .ac
+    {
+        top: 42px !important;
+    }
+    </style>
 </head>
 <body>
     <script id="vs" type="x-shader/x-vertex">
@@ -61,6 +67,9 @@
         // varying vec2 vUv;
         uniform vec2 mouse;
         uniform float time;
+        uniform float power;
+        uniform float radius;
+        uniform float displacementPower;
         #define M_PI 3.1415926535897932384626433832795
 
         void main() {
@@ -74,9 +83,9 @@
 
             // float dist = distance(position.xy, mouse) / 100.;
             vec3 newPos = position;
-            if(dist < 100.)
+            if(dist < radius)
             {
-                newPos.xy += cnoise(position) + sin(time) * 100. * deltaNormal;
+                newPos.xy += cnoise(position) + (power * displacementPower) * deltaNormal;
             }
             
             vec4 newPosition = vec4(newPos, 1.);

@@ -11,15 +11,21 @@ const objLoaders   = require('../utils/OBJLoader')(THREE);
 class InteractiveLayer {
   constructor(args) 
   {
+    this.wireframe         = false;
+    this.radius            = 100;
+    this.displacementPower = 1;
+
     this.startStats();
     this.startGUI();
 
-    this.renderer = null;
-    this.camera   = null;
-    this.scene    = null;
-    this.counter  = 0;
-    this.clock    = new THREE.Clock();
-    this.mouse    = new THREE.Vector2(0, 0);
+    this.renderer  = null;
+    this.camera    = null;
+    this.scene     = null;
+    this.counter   = 0;
+    this.clock     = new THREE.Clock();
+    this.mouse     = new THREE.Vector2(0, 0);
+    this.prevMouse = new THREE.Vector2(0, 0);
+    this.power     = 0;
 
     this.HEIGHT = this.getHeaderHight();
     this.boxes = [];
@@ -75,11 +81,14 @@ class InteractiveLayer {
     this.material = new THREE.ShaderMaterial( {
 
       uniforms: {
-        time : {type: 'f', value: 0},
-        color: { type: 'c', value: new THREE.Color(0xffffff) },
-        mouse : {type: 'v2', value: new THREE.Vector2(0,0)}
+        time              : {type: 'f', value: 0},
+        color             : {type: 'c', value: new THREE.Color(0xffffff) },
+        power             : {type: 'f', value: 0},
+        radius            : {type: 'f', value: this.radius},
+        displacementPower : {type: 'f', value: this.radius},
+        mouse             : {type: 'v2', value: new THREE.Vector2(0,0)}
       },
-      // wireframe      : true,
+      wireframe      : true,
       vertexShader   : document.getElementById( 'vs' ).textContent,
       fragmentShader : document.getElementById( 'fs' ).textContent
 
@@ -156,18 +165,24 @@ class InteractiveLayer {
 
   startGUI()
   {
-    // var gui = new dat.GUI()
-    // gui.add(camera.position, 'x', 0, 400)
-    // gui.add(camera.position, 'y', 0, 400)
-    // gui.add(camera.position, 'z', 0, 400)
+    var gui = new dat.GUI()
+    gui.add(this, 'wireframe');
+    gui.add(this, 'radius', 1, 500);
+    gui.add(this, 'displacementPower', 1, 10);
   }
 
   update()
   {
     this.stats.begin();
 
-    this.material.uniforms.time.value = this.clock.getElapsedTime();
-    this.material.uniforms.mouse.value = this.mouse;
+    this.material.wireframe                        = this.wireframe;
+    this.material.uniforms.time.value              = this.clock.getElapsedTime();
+    this.material.uniforms.mouse.value             = this.mouse;
+    this.material.uniforms.power.value             = this.power;
+    this.material.uniforms.radius.value            = this.radius;
+    this.material.uniforms.displacementPower.value = this.displacementPower;
+    
+    this.material.needsUpdate = true;
 
     // if(this.world.started)
     // {
@@ -207,8 +222,14 @@ class InteractiveLayer {
 
   onMouseMove(e)
   {
+    let currentMouse = new THREE.Vector2(e.clientX, e.clientY);
+
+    this.power = this.prevMouse.distanceTo(currentMouse);
+
     this.mouse.x = e.clientX - (window.innerWidth / 2);
     this.mouse.y = (window.innerHeight / 2) - e.clientY ;
+
+    this.prevMouse = new THREE.Vector2(e.clientX, e.clientY);
   }
 
   onResize()
