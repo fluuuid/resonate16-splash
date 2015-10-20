@@ -119,17 +119,9 @@ header
 header div.container
 {
     position: absolute;
-    top: 50%;
+    bottom: 10%;
     text-align: center;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    -webkit-transform: translate(-50%, -50%);
     width: 100%;
-}
-
-header div.container > img
-{
-    height: 44vh;
 }
 
 header div.container > p > a

@@ -1,17 +1,16 @@
-import THREE from 'three.js'; 
-import dat   from 'dat-gui' ;
-import Stats from 'stats-js' ;
-import UtilsP from 'utils-perf';
+import THREE    from 'three.js'; 
+import dat      from 'dat-gui' ;
+import Stats    from 'stats-js' ;
+import UtilsP   from 'utils-perf';
 import TweenMax from 'gsap';
 
 // const OrbitControls = require('three-orbit-controls')(THREE);
-const GoL = require('gof-gpu');
+const GoL          = require('gof-gpu');
+const objLoaders   = require('../utils/OBJLoader')(THREE);
 
 class InteractiveLayer {
   constructor(args) 
   {
-    window.onresize = this.onResize.bind(this);
-
     this.startStats();
     this.startGUI();
 
@@ -20,6 +19,7 @@ class InteractiveLayer {
     this.scene    = null;
     this.counter  = 0;
     this.clock    = new THREE.Clock();
+    this.mouse    = new THREE.Vector2(0, 0);
 
     this.HEIGHT = this.getHeaderHight();
     this.boxes = [];
@@ -30,6 +30,9 @@ class InteractiveLayer {
 
     this.onResize();
     this.update();
+
+    window.onresize = this.onResize.bind(this);
+    window.onmousemove = this.onMouseMove.bind(this);
   }
 
   startStats()
@@ -52,8 +55,12 @@ class InteractiveLayer {
 
   createScene()
   {
-    this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / this.HEIGHT, 0.01, 4000 );
-    this.camera.position.set(0, 0, 600);
+    // this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / this.HEIGHT, 0.01, 4000 );
+    // this.camera.position.set(0, 0, 600);
+
+    this.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 1000 );
+    this.camera.position.set(0, 0, 100);
+
     // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     // this.controls.maxDistance = 500;
 
@@ -65,60 +72,86 @@ class InteractiveLayer {
     // var gridHelper = new THREE.GridHelper( 100, 10 );        
     // this.scene.add( gridHelper );
 
-    this.texString1 = "static/textures/tex1.png";
-    this.texString2 = "static/textures/tex2.png";
-    this.texString3 = "static/textures/tex3.png";
-    this.texString4 = "static/textures/tex4.png";
-    this.texString5 = "static/textures/tex5.png";
-    this.texString6 = "static/textures/tex6.png";
+    this.material = new THREE.ShaderMaterial( {
 
-    this.material1 = new THREE.MeshBasicMaterial({transparent: true, map: THREE.ImageUtils.loadTexture(this.texString1)});
-    this.material2 = new THREE.MeshBasicMaterial({transparent: true, map: THREE.ImageUtils.loadTexture(this.texString2)});
-    this.material3 = new THREE.MeshBasicMaterial({transparent: true, map: THREE.ImageUtils.loadTexture(this.texString3)});
-    this.material4 = new THREE.MeshBasicMaterial({transparent: true, map: THREE.ImageUtils.loadTexture(this.texString4)});
-    this.material5 = new THREE.MeshBasicMaterial({transparent: true, map: THREE.ImageUtils.loadTexture(this.texString5)});
-    this.material6 = new THREE.MeshBasicMaterial({transparent: true, map: THREE.ImageUtils.loadTexture(this.texString6)});
+      uniforms: {
+        time : {type: 'f', value: 0},
+        color: { type: 'c', value: new THREE.Color(0xffffff) },
+        mouse : {type: 'v2', value: new THREE.Vector2(0,0)}
+      },
+      // wireframe      : true,
+      vertexShader   : document.getElementById( 'vs' ).textContent,
+      fragmentShader : document.getElementById( 'fs' ).textContent
 
-    this.mats = [this.material1, this.material2, this.material3, this.material4, this.material5, this.material6];
+    } );
+
+    this.loader = new THREE.OBJLoader();
+    this.loader.load('static/r.obj', this.onLoaded.bind(this));
 
     this.addPlanes();
   }
 
+  onLoaded(obj)
+  {
+    let tempDae = obj;
+
+    tempDae.traverse( function ( child ) {
+
+      if ( child instanceof THREE.Mesh ) {
+
+          this.objectMesh = child;
+
+          this.objectMesh.geometry.computeFaceNormals();
+          this.objectMesh.geometry.computeBoundingSphere();
+
+          this.objectMesh.material = this.material;
+          this.objectMesh.position.x = 40;
+          this.objectMesh.position.y = -40;
+
+          // this.objectMesh.castShadow = true;
+          // this.objectMesh.receiveShadow = false;
+      }
+
+    }.bind(this) );
+
+    this.scene.add(this.objectMesh);
+  }
+
   addPlanes()
   {
-    this.removeAll();
+    // this.removeAll();
 
-    let vmax = Math.max(window.innerWidth, window.innerHeight);
-    let vmin = Math.min(window.innerWidth, window.innerHeight);
+    // let vmax = Math.max(window.innerWidth, window.innerHeight);
+    // let vmin = Math.min(window.innerWidth, window.innerHeight);
 
-    let boxSize = (vmax / vmin) * 22 >> 0;
-    let resX = UtilsP.round(vmax / boxSize);
-    let offset = (boxSize + (boxSize * .1))
-    let totalWidth = offset * resX / 2;
+    // let boxSize = (vmax / vmin) * 22 >> 0;
+    // let resX = UtilsP.round(vmax / boxSize);
+    // let offset = (boxSize + (boxSize * .1))
+    // let totalWidth = offset * resX / 2;
 
-    this.world = new GoL(resX);
-    this.boxes = [];
-    let counter = 0;
+    // this.world = new GoL(resX);
+    // this.boxes = [];
+    // let counter = 0;
 
-    this.geo = new THREE.PlaneBufferGeometry(boxSize, boxSize);
+    // this.geo = new THREE.PlaneBufferGeometry(boxSize, boxSize);
 
-    for (var x = 0; x < resX; x++) {
-        for (var y = 0; y < resX; y++) {
-            var b = new THREE.Mesh(this.geo, this.mats[counter % (this.mats.length - 1)]);
-            b.position.x = totalWidth - (x * offset);
-            b.position.y = totalWidth - (y * offset);
-            this.scene.add(b)
-            this.boxes.push(b);
-            counter++;
-        }
-    };
+    // for (var x = 0; x < resX; x++) {
+    //     for (var y = 0; y < resX; y++) {
+    //         var b = new THREE.Mesh(this.geo, this.mats[counter % (this.mats.length - 1)]);
+    //         b.position.x = totalWidth - (x * offset);
+    //         b.position.y = totalWidth - (y * offset);
+    //         this.scene.add(b)
+    //         this.boxes.push(b);
+    //         counter++;
+    //     }
+    // };
   }
 
   removeAll()
   {
-    for (var i = this.boxes.length - 1; i >= 0; i--) {
-        this.scene.remove(this.boxes[i]);
-    };
+    // for (var i = this.boxes.length - 1; i >= 0; i--) {
+    //     this.scene.remove(this.boxes[i]);
+    // };
   }
 
   startGUI()
@@ -133,30 +166,33 @@ class InteractiveLayer {
   {
     this.stats.begin();
 
-    if(this.world.started)
-    {
-      if(this.counter % 15 == 0)
-      {
-        let howManyActive = [];
-        var grid = this.world.update();
-        // +=4 as you just need the first value of the GoL 255 or 0
-        for (var i = 0; i < grid.length; i+=4) {
-            var line = grid[i];
-            // line[a] element true/false
-            var lineBoxes = this.boxes[(i/4) >> 0];
-            if(line == 255) howManyActive.push(i);
-            lineBoxes.visible = line == 255;
-            // TweenMax.to(lineBoxes.material, .3, {overwrite: 0, opacity:  ? 1 : 0, onUpdate : function(a){ a.needsUpdate = true; }, onUpdateParams: [lineBoxes.material]});
-        }
+    this.material.uniforms.time.value = this.clock.getElapsedTime();
+    this.material.uniforms.mouse.value = this.mouse;
 
-        if((howManyActive.length / 4) >> 0 < 6)
-        {
-          this.world.init();
-        }
-      }
+    // if(this.world.started)
+    // {
+    //   if(this.counter % 15 == 0)
+    //   {
+    //     let howManyActive = [];
+    //     var grid = this.world.update();
+    //     // +=4 as you just need the first value of the GoL 255 or 0
+    //     for (var i = 0; i < grid.length; i+=4) {
+    //         var line = grid[i];
+    //         // line[a] element true/false
+    //         var lineBoxes = this.boxes[(i/4) >> 0];
+    //         if(line == 255) howManyActive.push(i);
+    //         lineBoxes.visible = line == 255;
+    //         // TweenMax.to(lineBoxes.material, .3, {overwrite: 0, opacity:  ? 1 : 0, onUpdate : function(a){ a.needsUpdate = true; }, onUpdateParams: [lineBoxes.material]});
+    //     }
 
-      this.counter++;
-    }
+    //     if((howManyActive.length / 4) >> 0 < 6)
+    //     {
+    //       this.world.init();
+    //     }
+    //   }
+
+    //   this.counter++;
+    // }
 
     this.renderer.render(this.scene, this.camera);
 
@@ -169,13 +205,26 @@ class InteractiveLayer {
     return window.innerHeight;
   }
 
+  onMouseMove(e)
+  {
+    this.mouse.x = e.clientX - (window.innerWidth / 2);
+    this.mouse.y = (window.innerHeight / 2) - e.clientY ;
+  }
+
   onResize()
   {
     this.HEIGHT = this.getHeaderHight();
-    this.addPlanes();
+
     this.renderer.setSize(window.innerWidth, this.HEIGHT);
-    this.camera.aspect = window.innerWidth / this.HEIGHT;
+
+    this.camera.left = window.innerWidth / - 2;
+    this.camera.right = window.innerWidth / 2;
+    this.camera.top = window.innerHeight / 2;
+    this.camera.bottom = window.innerHeight / - 2;
+
     this.camera.updateProjectionMatrix();
+    // this.camera.aspect = window.innerWidth / this.HEIGHT;
+    // this.camera.updateProjectionMatrix();
   }
 }
 
