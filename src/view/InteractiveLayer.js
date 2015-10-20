@@ -13,7 +13,7 @@ class InteractiveLayer {
   {
     this.wireframe         = false;
     this.radius            = 100;
-    this.displacementPower = 1;
+    this.displacementPower = 2;
 
     this.startStats();
     this.startGUI();

@@ -72,6 +72,10 @@
         uniform float displacementPower;
         #define M_PI 3.1415926535897932384626433832795
 
+        float qinticIn(float t) {
+          return pow(t, 5.0);
+        }
+
         void main() {
 
             // float b = 5.0 * pnoise( 0.05 * position + vec3( 2.0 * sin(time) ), vec3( 1.0 ) );
@@ -83,9 +87,11 @@
 
             // float dist = distance(position.xy, mouse) / 100.;
             vec3 newPos = position;
+
             if(dist < radius)
             {
-                newPos.xy += cnoise(position) + (power * displacementPower) * deltaNormal;
+                vec2 target = cnoise(position) + (power * displacementPower) * deltaNormal;
+                newPos.xy += target;
             }
             
             vec4 newPosition = vec4(newPos, 1.);
