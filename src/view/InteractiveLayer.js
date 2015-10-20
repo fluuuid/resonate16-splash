@@ -14,6 +14,7 @@ class InteractiveLayer {
     this.wireframe         = false;
     this.radius            = 100;
     this.displacementPower = 2;
+    this.showTexture       = false;
 
     this.startStats();
     this.startGUI();
@@ -86,7 +87,9 @@ class InteractiveLayer {
         power             : {type: 'f', value: 0},
         radius            : {type: 'f', value: this.radius},
         displacementPower : {type: 'f', value: this.radius},
-        mouse             : {type: 'v2', value: new THREE.Vector2(0,0)}
+        mouse             : {type: 'v2', value: new THREE.Vector2(0,0)},
+        showTexture       : {type: 'i', value: Number(this.showTexture)},
+        texture1          : {type: 't', value: THREE.ImageUtils.loadTexture('static/textures/tex6.png')},
       },
       wireframe      : true,
       vertexShader   : document.getElementById( 'vs' ).textContent,
@@ -167,6 +170,7 @@ class InteractiveLayer {
   {
     var gui = new dat.GUI()
     gui.add(this, 'wireframe');
+    gui.add(this, 'showTexture');
     gui.add(this, 'radius', 1, 500);
     gui.add(this, 'displacementPower', 1, 10);
   }
@@ -175,11 +179,13 @@ class InteractiveLayer {
   {
     this.stats.begin();
 
-    this.material.wireframe                        = this.wireframe;
-    this.material.uniforms.time.value              = this.clock.getElapsedTime();
-    this.material.uniforms.mouse.value             = this.mouse;
-    this.material.uniforms.power.value             = this.power;
-    this.material.uniforms.radius.value            = this.radius;
+    this.material.wireframe                  = this.wireframe;
+    this.material.uniforms.time.value        = this.clock.getElapsedTime();
+    this.material.uniforms.mouse.value       = this.mouse;
+    this.material.uniforms.power.value       = this.power;
+    this.material.uniforms.radius.value      = this.radius;
+    this.material.uniforms.showTexture.value = Number(this.showTexture);
+
     this.material.uniforms.displacementPower.value = this.displacementPower;
     
     this.material.needsUpdate = true;
