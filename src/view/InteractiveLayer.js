@@ -15,6 +15,8 @@ class InteractiveLayer {
     this.radius            = 100;
     this.displacementPower = 2;
     this.showTexture       = false;
+    this.showGameOfLife    = true;
+    this.planeSize         = 150;
 
     this.startStats();
     this.startGUI();
@@ -27,6 +29,7 @@ class InteractiveLayer {
     this.mouse     = new THREE.Vector2(0, 0);
     this.prevMouse = new THREE.Vector2(0, 0);
     this.power     = 0;
+    this.grid      = [];
 
     this.HEIGHT = this.getHeaderHight();
     this.boxes = [];
@@ -79,6 +82,8 @@ class InteractiveLayer {
     // var gridHelper = new THREE.GridHelper( 100, 10 );        
     // this.scene.add( gridHelper );
 
+    this.shapeMaterial = new THREE.MeshBasicMaterial({transparent: true, opacity: .3});
+
     this.material = new THREE.ShaderMaterial( {
 
       uniforms: {
@@ -97,10 +102,12 @@ class InteractiveLayer {
 
     } );
 
+    this.addPlanes();
+
     this.loader = new THREE.OBJLoader();
     this.loader.load('static/r.obj', this.onLoaded.bind(this));
 
-    this.addPlanes();
+    
   }
 
   onLoaded(obj)
@@ -114,14 +121,10 @@ class InteractiveLayer {
           this.objectMesh = child;
 
           this.objectMesh.geometry.computeFaceNormals();
-          this.objectMesh.geometry.computeBoundingSphere();
 
           this.objectMesh.material = this.material;
           this.objectMesh.position.x = 40;
           this.objectMesh.position.y = -40;
-
-          // this.objectMesh.castShadow = true;
-          // this.objectMesh.receiveShadow = false;
       }
 
     }.bind(this) );
@@ -131,46 +134,55 @@ class InteractiveLayer {
 
   addPlanes()
   {
-    // this.removeAll();
+    if(this.golContainer) this.removeAll();
+    this.golContainer = new THREE.Object3D();
 
-    // let vmax = Math.max(window.innerWidth, window.innerHeight);
-    // let vmin = Math.min(window.innerWidth, window.innerHeight);
+    let vmax = Math.max(window.innerWidth, window.innerHeight);
+    let vmin = Math.min(window.innerWidth, window.innerHeight);
 
-    // let boxSize = (vmax / vmin) * 22 >> 0;
-    // let resX = UtilsP.round(vmax / boxSize);
-    // let offset = (boxSize + (boxSize * .1))
-    // let totalWidth = offset * resX / 2;
+    let boxSize = (vmax / vmin) * this.planeSize >> 0;
+    let resX = UtilsP.round(vmax / boxSize);
+    let offset = (boxSize + (boxSize * (this.planeSize / 10000)))
+    let totalWidth = offset * resX / 2;
 
-    // this.world = new GoL(resX);
-    // this.boxes = [];
-    // let counter = 0;
+    this.world = new GoL(resX);
+    this.boxes = [];
+    let counter = 0;
 
-    // this.geo = new THREE.PlaneBufferGeometry(boxSize, boxSize);
+    this.geo = new THREE.PlaneBufferGeometry(boxSize, boxSize);
 
-    // for (var x = 0; x < resX; x++) {
-    //     for (var y = 0; y < resX; y++) {
-    //         var b = new THREE.Mesh(this.geo, this.mats[counter % (this.mats.length - 1)]);
-    //         b.position.x = totalWidth - (x * offset);
-    //         b.position.y = totalWidth - (y * offset);
-    //         this.scene.add(b)
-    //         this.boxes.push(b);
-    //         counter++;
-    //     }
-    // };
+    for (var x = 0; x < resX; x++) {
+        for (var y = 0; y < resX; y++) {
+            var b = new THREE.Mesh(this.geo, this.shapeMaterial);
+            b.position.x = totalWidth - (x * offset);
+            b.position.y = totalWidth - (y * offset);
+            this.golContainer.add(b)
+            this.boxes.push(b);
+            counter++;
+        }
+    };
+
+    this.scene.add(this.golContainer);
   }
 
   removeAll()
   {
-    // for (var i = this.boxes.length - 1; i >= 0; i--) {
-    //     this.scene.remove(this.boxes[i]);
-    // };
+    for (var i = this.boxes.length - 1; i >= 0; i--) {
+        this.golContainer.remove(this.boxes[i]);
+    };
+
+    this.scene.remove(this.golContainer);
   }
 
   startGUI()
   {
     var gui = new dat.GUI()
     gui.add(this, 'wireframe');
+
+    gui.add(this, 'showGameOfLife').onChange(this.addPlanes.bind(this));
+    gui.add(this, 'planeSize', 50, 300).onChange(this.addPlanes.bind(this));
     gui.add(this, 'showTexture');
+
     gui.add(this, 'radius', 1, 500);
     gui.add(this, 'displacementPower', 1, 10);
   }
@@ -190,30 +202,40 @@ class InteractiveLayer {
     
     this.material.needsUpdate = true;
 
-    // if(this.world.started)
-    // {
-    //   if(this.counter % 15 == 0)
-    //   {
-    //     let howManyActive = [];
-    //     var grid = this.world.update();
-    //     // +=4 as you just need the first value of the GoL 255 or 0
-    //     for (var i = 0; i < grid.length; i+=4) {
-    //         var line = grid[i];
-    //         // line[a] element true/false
-    //         var lineBoxes = this.boxes[(i/4) >> 0];
-    //         if(line == 255) howManyActive.push(i);
-    //         lineBoxes.visible = line == 255;
-    //         // TweenMax.to(lineBoxes.material, .3, {overwrite: 0, opacity:  ? 1 : 0, onUpdate : function(a){ a.needsUpdate = true; }, onUpdateParams: [lineBoxes.material]});
-    //     }
+    this.activeGOL = [];
 
-    //     if((howManyActive.length / 4) >> 0 < 6)
-    //     {
-    //       this.world.init();
-    //     }
-    //   }
+    if(this.world.started && this.showGameOfLife)
+    {
+      if(this.counter % 60 == 0)
+      {
+        let howManyActive = [];
+        this.grid = this.world.update();
+        // +=4 as you just need the first value of the GoL 255 or 0
+        for (let i = 0; i < this.grid.length; i+=4) {
+            let line = this.grid[i];
+            // line[a] element true/false
+            let lineBoxes = this.boxes[(i/4) >> 0];
+            if(line == 255) 
+            {
+              howManyActive.push(i);
+              let xx = lineBoxes.position.x + this.planeSize / 2;
+              let yy = lineBoxes.position.y + this.planeSize / 2;
 
-    //   this.counter++;
-    // }
+              this.activeGOL.push(new THREE.Vector2(xx, yy));
+            }
+            lineBoxes.visible = line == 255;
+        }
+
+        if((howManyActive.length / 4) >> 0 < 2)
+        {
+          this.world.init();
+        }
+      }
+
+      this.counter++;
+    } else {
+      this.removeAll();
+    }
 
     this.renderer.render(this.scene, this.camera);
 
