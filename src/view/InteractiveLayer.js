@@ -5,7 +5,7 @@ import UtilsP   from 'utils-perf';
 import TweenMax from 'gsap';
 
 // const OrbitControls = require('three-orbit-controls')(THREE);
-const GoL          = require('gof-gpu');
+// const GoL          = require('gof-gpu');
 const objLoaders   = require('../utils/OBJLoader')(THREE);
 
 class InteractiveLayer {
@@ -15,8 +15,8 @@ class InteractiveLayer {
     this.radius            = 100;
     this.displacementPower = 2;
     this.showTexture       = false;
-    this.showGameOfLife    = true;
-    this.planeSize         = 150;
+    // this.showGameOfLife    = true;
+    // this.planeSize         = 150;
 
     this.startStats();
     this.startGUI();
@@ -69,7 +69,7 @@ class InteractiveLayer {
     // this.camera.position.set(0, 0, 600);
 
     this.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 1000 );
-    this.camera.position.set(0, 0, 100);
+    this.camera.position.set(0, 0, 1);
 
     // this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     // this.controls.maxDistance = 500;
@@ -102,7 +102,7 @@ class InteractiveLayer {
 
     } );
 
-    this.addPlanes();
+    // this.addPlanes();
 
     this.loader = new THREE.OBJLoader();
     this.loader.load('static/r.obj', this.onLoaded.bind(this));
@@ -132,55 +132,55 @@ class InteractiveLayer {
     this.scene.add(this.objectMesh);
   }
 
-  addPlanes()
-  {
-    if(this.golContainer) this.removeAll();
-    this.golContainer = new THREE.Object3D();
+  // addPlanes()
+  // {
+  //   if(this.golContainer) this.removeAll();
+  //   this.golContainer = new THREE.Object3D();
 
-    let vmax = Math.max(window.innerWidth, window.innerHeight);
-    let vmin = Math.min(window.innerWidth, window.innerHeight);
+  //   let vmax = Math.max(window.innerWidth, window.innerHeight);
+  //   let vmin = Math.min(window.innerWidth, window.innerHeight);
 
-    let boxSize = (vmax / vmin) * this.planeSize >> 0;
-    let resX = UtilsP.round(vmax / boxSize);
-    let offset = (boxSize + (boxSize * (this.planeSize / 10000)))
-    let totalWidth = offset * resX / 2;
+  //   let boxSize = (vmax / vmin) * this.planeSize >> 0;
+  //   let resX = UtilsP.round(vmax / boxSize);
+  //   let offset = (boxSize + (boxSize * (this.planeSize / 10000)))
+  //   let totalWidth = offset * resX / 2;
 
-    this.world = new GoL(resX);
-    this.boxes = [];
-    let counter = 0;
+  //   this.world = new GoL(resX);
+  //   this.boxes = [];
+  //   let counter = 0;
 
-    this.geo = new THREE.PlaneBufferGeometry(boxSize, boxSize);
+  //   this.geo = new THREE.PlaneBufferGeometry(boxSize, boxSize);
 
-    for (var x = 0; x < resX; x++) {
-        for (var y = 0; y < resX; y++) {
-            var b = new THREE.Mesh(this.geo, this.shapeMaterial);
-            b.position.x = totalWidth - (x * offset);
-            b.position.y = totalWidth - (y * offset);
-            this.golContainer.add(b)
-            this.boxes.push(b);
-            counter++;
-        }
-    };
+  //   for (var x = 0; x < resX; x++) {
+  //       for (var y = 0; y < resX; y++) {
+  //           var b = new THREE.Mesh(this.geo, this.shapeMaterial);
+  //           b.position.x = totalWidth - (x * offset);
+  //           b.position.y = totalWidth - (y * offset);
+  //           this.golContainer.add(b)
+  //           this.boxes.push(b);
+  //           counter++;
+  //       }
+  //   };
 
-    this.scene.add(this.golContainer);
-  }
+  //   this.scene.add(this.golContainer);
+  // }
 
-  removeAll()
-  {
-    for (var i = this.boxes.length - 1; i >= 0; i--) {
-        this.golContainer.remove(this.boxes[i]);
-    };
+  // removeAll()
+  // {
+  //   for (var i = this.boxes.length - 1; i >= 0; i--) {
+  //       this.golContainer.remove(this.boxes[i]);
+  //   };
 
-    this.scene.remove(this.golContainer);
-  }
+  //   this.scene.remove(this.golContainer);
+  // }
 
   startGUI()
   {
     var gui = new dat.GUI()
     gui.add(this, 'wireframe');
 
-    gui.add(this, 'showGameOfLife').onChange(this.addPlanes.bind(this));
-    gui.add(this, 'planeSize', 50, 300).onChange(this.addPlanes.bind(this));
+    // gui.add(this, 'showGameOfLife').onChange(this.addPlanes.bind(this));
+    // gui.add(this, 'planeSize', 50, 300).onChange(this.addPlanes.bind(this));
     gui.add(this, 'showTexture');
 
     gui.add(this, 'radius', 1, 500);
@@ -197,49 +197,53 @@ class InteractiveLayer {
     this.material.uniforms.power.value       = this.power;
     this.material.uniforms.radius.value      = this.radius;
     this.material.uniforms.showTexture.value = Number(this.showTexture);
-
     this.material.uniforms.displacementPower.value = this.displacementPower;
     
     this.material.needsUpdate = true;
 
-    this.activeGOL = [];
+    // this.activeGOL = [];
 
-    if(this.world.started && this.showGameOfLife)
-    {
-      if(this.counter % 60 == 0)
-      {
-        let howManyActive = [];
-        this.grid = this.world.update();
-        // +=4 as you just need the first value of the GoL 255 or 0
-        for (let i = 0; i < this.grid.length; i+=4) {
-            let line = this.grid[i];
-            // line[a] element true/false
-            let lineBoxes = this.boxes[(i/4) >> 0];
-            if(line == 255) 
-            {
-              howManyActive.push(i);
-              let xx = lineBoxes.position.x + this.planeSize / 2;
-              let yy = lineBoxes.position.y + this.planeSize / 2;
+    // if(this.world.started && this.showGameOfLife)
+    // {
+    //   if(this.counter % 60 == 0)
+    //   {
+    //     let howManyActive = [];
+    //     this.grid = this.world.update();
+    //     // +=4 as you just need the first value of the GoL 255 or 0
+    //     for (let i = 0; i < this.grid.length; i+=4) {
+    //         let line = this.grid[i];
+    //         // line[a] element true/false
+    //         let lineBoxes = this.boxes[(i/4) >> 0];
+    //         if(line == 255) 
+    //         {
+    //           howManyActive.push(i);
+    //           let xx = lineBoxes.position.x;
+    //           let yy = lineBoxes.position.y;
 
-              this.activeGOL.push(new THREE.Vector2(xx, yy));
-            }
-            lineBoxes.visible = line == 255;
-        }
+    //           this.activeGOL.push(new THREE.Vector2(xx, yy));
+    //         }
+    //         lineBoxes.visible = line == 255;
+    //     }
 
-        if((howManyActive.length / 4) >> 0 < 2)
-        {
-          this.world.init();
-        }
-      }
+    //     this.material.uniforms.points.value = this.activeGOL
 
-      this.counter++;
-    } else {
-      this.removeAll();
-    }
+    //     if((howManyActive.length / 4) >> 0 < 2)
+    //     {
+    //       this.world.init();
+    //     }
+    //   }
+
+    //   this.counter++;
+    // } else {
+    //   this.removeAll();
+    // }
 
     this.renderer.render(this.scene, this.camera);
 
     this.stats.end()
+
+    this.mouse.x = this.mouse.y = 10000.;
+
     requestAnimationFrame(this.update.bind(this));
   }
 
