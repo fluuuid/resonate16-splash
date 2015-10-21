@@ -6,6 +6,7 @@ import TweenMax from 'gsap';
 
 // const OrbitControls = require('three-orbit-controls')(THREE);
 // const GoL          = require('gof-gpu');
+const glslify = require('glslify');
 const objLoaders   = require('../utils/OBJLoader')(THREE);
 
 class InteractiveLayer {
@@ -101,7 +102,7 @@ class InteractiveLayer {
       new THREE.Vector4(248 / 255, 225 / 255, 5 / 255, 1.0)
     ]
 
-
+    let gradient = (this.leftColors.length * Math.random()) >> 0;
 
     this.material = new THREE.ShaderMaterial( {
       uniforms: {
@@ -113,12 +114,12 @@ class InteractiveLayer {
         resolution        : {type: 'v2', value: new THREE.Vector2(window.innerWidth,window.innerHeight)},
         mouse             : {type: 'v2', value: new THREE.Vector2(0,0)},
         showTexture       : {type: 'i', value: Number(this.showTexture)},
-        gradientsLeft     : {type : 'v4v', value : this.leftColors},
-        gradientsRight     : {type : 'v4v', value : this.rightColors}
+        gradientsLeft     : {type : 'v4', value : this.leftColors[gradient]},
+        gradientsRight    : {type : 'v4', value : this.rightColors[gradient]}
       },
       wireframe      : true,
-      vertexShader   : document.getElementById( 'vs' ).textContent,
-      fragmentShader : document.getElementById( 'fs' ).textContent
+      vertexShader   : glslify('./shader/vertex.vert'),
+      fragmentShader : glslify('./shader/frag.frag')
 
     } );
 
