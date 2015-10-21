@@ -14,7 +14,8 @@ class InteractiveLayer {
     this.wireframe         = false;
     this.radius            = 100;
     this.displacementPower = 2;
-    this.showTexture       = false;
+    this.showTexture       = true;
+    this.currentGradient   = 0;
     // this.showGameOfLife    = true;
     // this.planeSize         = 150;
 
@@ -84,17 +85,36 @@ class InteractiveLayer {
 
     this.shapeMaterial = new THREE.MeshBasicMaterial({transparent: true, opacity: .3});
 
-    this.material = new THREE.ShaderMaterial( {
+    this.leftColors = [
+      new THREE.Vector4(246 / 255, 199 / 255, 217 / 255, 1.0),
+      new THREE.Vector4(246 / 255, 227 / 255, 31 / 255, 1.0),
+      new THREE.Vector4(92 / 255, 186 / 255, 80 / 255, 1.0),
+      new THREE.Vector4(101 / 255, 48 / 255, 141 / 255, 1.0),
+      new THREE.Vector4(237 / 255, 34 / 255, 44 / 255, 1.0)
+    ];
 
+    this.rightColors = [
+      new THREE.Vector4(104 / 255, 48 / 255, 143 / 255, 1.0),
+      new THREE.Vector4(102 / 255, 182 / 255, 87 / 255, 1.0),
+      new THREE.Vector4(97 / 255, 201 / 255, 234 / 255, 1.0),
+      new THREE.Vector4(97 / 255, 200 / 255, 232 / 255, 1.0),
+      new THREE.Vector4(248 / 255, 225 / 255, 5 / 255, 1.0)
+    ]
+
+
+
+    this.material = new THREE.ShaderMaterial( {
       uniforms: {
         time              : {type: 'f', value: 0},
         color             : {type: 'c', value: new THREE.Color(0xffffff) },
         power             : {type: 'f', value: 0},
         radius            : {type: 'f', value: this.radius},
         displacementPower : {type: 'f', value: this.radius},
+        resolution        : {type: 'v2', value: new THREE.Vector2(window.innerWidth,window.innerHeight)},
         mouse             : {type: 'v2', value: new THREE.Vector2(0,0)},
         showTexture       : {type: 'i', value: Number(this.showTexture)},
-        texture1          : {type: 't', value: THREE.ImageUtils.loadTexture('static/textures/tex6.png')},
+        gradientsLeft     : {type : 'v4v', value : this.leftColors},
+        gradientsRight     : {type : 'v4v', value : this.rightColors}
       },
       wireframe      : true,
       vertexShader   : document.getElementById( 'vs' ).textContent,
@@ -112,22 +132,16 @@ class InteractiveLayer {
 
   onLoaded(obj)
   {
-    let tempDae = obj;
+    let bgeo = obj.children[0].geometry;
+    bgeo.scale(.7, .7, .7);
 
-    tempDae.traverse( function ( child ) {
+    let nv = bgeo.attributes.position.array.length;
+    let p = new Float32Array(nv);
+    bgeo.addAttribute('duration', new THREE.BufferAttribute(p, 1));
 
-      if ( child instanceof THREE.Mesh ) {
-
-          this.objectMesh = child;
-
-          this.objectMesh.geometry.computeFaceNormals();
-
-          this.objectMesh.material = this.material;
-          this.objectMesh.position.x = 40;
-          this.objectMesh.position.y = -40;
-      }
-
-    }.bind(this) );
+    this.objectMesh = new THREE.Mesh(bgeo, this.material);
+    this.objectMesh.position.x = 40;
+    this.objectMesh.position.y = -40;
 
     this.scene.add(this.objectMesh);
   }
@@ -182,7 +196,6 @@ class InteractiveLayer {
     // gui.add(this, 'showGameOfLife').onChange(this.addPlanes.bind(this));
     // gui.add(this, 'planeSize', 50, 300).onChange(this.addPlanes.bind(this));
     gui.add(this, 'showTexture');
-
     gui.add(this, 'radius', 1, 500);
     gui.add(this, 'displacementPower', 1, 10);
   }
@@ -269,6 +282,8 @@ class InteractiveLayer {
     this.HEIGHT = this.getHeaderHight();
 
     this.renderer.setSize(window.innerWidth, this.HEIGHT);
+
+    this.material.uniforms.resolution.value = new THREE.Vector2(window.innerWidth, window.innerHeight);
 
     this.camera.left = window.innerWidth / - 2;
     this.camera.right = window.innerWidth / 2;

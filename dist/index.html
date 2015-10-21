@@ -72,6 +72,13 @@
         uniform float displacementPower;
 
         #define M_PI 3.1415926535897932384626433832795
+        #define HALF_PI 1.5707963267948966
+
+        float elasticInOut(float t) {
+          return t < 0.5
+            ? 0.5 * sin(+13.0 * HALF_PI * 2.0 * t) * pow(2.0, 10.0 * (2.0 * t - 1.0))
+            : 0.5 * sin(-13.0 * HALF_PI * ((2.0 * t - 1.0) + 1.0)) * pow(2.0, -10.0 * (2.0 * t - 1.0)) + 1.0;
+        }
 
         vec4 getPosition(vec3 oldPos, vec2 ref)
         {
@@ -106,14 +113,25 @@
     <script type="x-shader/x-fragment" id="fs">
 
         uniform vec3 color;
-        uniform sampler2D texture1;
         varying vec2 vUv;
         uniform int showTexture;
+        uniform vec2 resolution;
+        uniform float time;
+        uniform vec2 mouse;
+
+        vec4 toRGB(vec3 rgb){ return vec4(rgb/ 255., 1.); }
+
+        uniform vec4 gradientsLeft[5];
+        uniform vec4 gradientsRight[5];
 
         void main() {
+
             if(showTexture == 1)
             {
-                gl_FragColor = texture2D(texture1, vUv);
+                vec2 pt = vUv.xy - .5;
+                vec2 position = (gl_FragCoord.xy / resolution.xy);
+                gl_FragColor = vec4(mix(gradientsLeft[3], gradientsRight[3], pt.x));
+
             } else {
                 gl_FragColor = vec4(color, 1.);
             }
