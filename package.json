@@ -29,7 +29,7 @@
     "page": "^1.6.4",
     "stats-js": "^1.0.0-alpha1",
     "three-orbit-controls": "^69.0.4",
-    "three.js": "^0.72.0",
+    "three.js": "^0.73.0",
     "uglifyjs": "^2.4.10",
     "utils-perf": "^1.1.1",
     "watchify": "^3.2.3"

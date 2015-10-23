@@ -1,11 +1,14 @@
 import THREE    from 'three.js'; 
+// var THREE = require('../three/three');
 import dat      from 'dat-gui' ;
 import Stats    from 'stats-js' ;
-import UtilsP   from 'utils-perf';
+import Utils   from 'utils-perf';
 import TweenMax from 'gsap';
+import Paper from './Paper';
 
-// const OrbitControls = require('three-orbit-controls')(THREE);
+const OrbitControls = require('three-orbit-controls')(THREE);
 // const GoL          = require('gof-gpu');
+
 const glslify = require('glslify');
 const objLoaders   = require('../utils/OBJLoader')(THREE);
 
@@ -51,16 +54,15 @@ class InteractiveLayer {
   {
     this.stats = new Stats(); 
     this.stats.domElement.style.position = 'absolute';
-    this.stats.domElement.style.top = 0;
-    this.stats.domElement.style.display = 'none';
+    this.stats.domElement.style.top = "50px";
+    // this.stats.domElement.style.display = 'none';
     document.body.appendChild(this.stats.domElement);
   }
 
   createRender()
   {
     this.renderer = new THREE.WebGLRenderer( {
-        antialias : true,
-        clearColor: 0
+        antialias : true
     } );
     document.querySelector('header').appendChild(this.renderer.domElement)
   }
@@ -68,7 +70,7 @@ class InteractiveLayer {
   createScene()
   {
     // this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / this.HEIGHT, 0.01, 4000 );
-    // this.camera.position.set(0, 0, 600);
+    // this.camera.position.set(0, 40, 1200);
 
     this.camera = new THREE.OrthographicCamera( window.innerWidth / - 2, window.innerWidth / 2, window.innerHeight / 2, window.innerHeight / - 2, 1, 1000 );
     this.camera.position.set(0, 0, 1);
@@ -77,12 +79,70 @@ class InteractiveLayer {
     // this.controls.maxDistance = 500;
 
     this.scene = new THREE.Scene();
+    this.light = new THREE.DirectionalLight(0xcccccc);
+    this.light.position.z = 10;
+    this.scene.add(this.light);
+
+    // this.scene.add(new THREE.AmbientLight(0xFFFFFF));
+  }
+
+  addParticles()
+  {
+    // this.colours = [
+    //     new THREE.MeshPhongMaterial({color:new THREE.Color('#333333'), side:THREE.DoubleSide }),
+    //     new THREE.MeshPhongMaterial({color:new THREE.Color('#cccccc'), side:THREE.DoubleSide })
+    // ]
+
+      this.colours = [
+        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(246, 199, 217)") , side: THREE.DoubleSide } ),
+        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(246, 227, 31)") , side: THREE.DoubleSide } ),
+        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(92, 186, 80)") , side: THREE.DoubleSide } ),
+        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(101, 48, 141)") , side: THREE.DoubleSide } ),
+        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(237, 34, 44)") , side: THREE.DoubleSide } ),
+        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(104, 48, 143)") , side: THREE.DoubleSide } ),
+        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(102, 182, 87)") , side: THREE.DoubleSide } ),
+        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(97, 201, 234)") , side: THREE.DoubleSide } ),
+        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(97, 200, 232)") , side: THREE.DoubleSide } ),
+        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(248, 225, 5)") , side: THREE.DoubleSide } ), 
+
+        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(246, 199, 217)") , wireframe: true, side: THREE.DoubleSide } ),
+        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(246, 227, 31)") , wireframe: true, side: THREE.DoubleSide } ),
+        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(92, 186, 80)") , wireframe: true, side: THREE.DoubleSide } ),
+        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(101, 48, 141)") , wireframe: true, side: THREE.DoubleSide } ),
+        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(237, 34, 44)") , wireframe: true, side: THREE.DoubleSide } ),
+        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(104, 48, 143)") , wireframe: true, side: THREE.DoubleSide } ),
+        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(102, 182, 87)") , wireframe: true, side: THREE.DoubleSide } ),
+        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(97, 201, 234)") , wireframe: true, side: THREE.DoubleSide } ),
+        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(97, 200, 232)") , wireframe: true, side: THREE.DoubleSide } ),
+        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(248, 225, 5)") , wireframe: true, side: THREE.DoubleSide } ), 
+      ];
+
+      this.colours = Utils.randomArray(this.colours);
+
+      this.geos = [
+        new THREE.CircleGeometry(10, 32),
+        new THREE.PlaneBufferGeometry(10, 10),
+        new THREE.BoxGeometry(20, 20, 20),
+        new THREE.IcosahedronGeometry(20, 3)
+      ];
+
+      for (var i = this.particles.length - 1; i >= 0; i--) {
+          setTimeout(function(i)
+          {
+            this.particles[i] = new Paper(this.geos[i % (this.geos.length - 1)], this.colours[i % (this.colours.length - 1)]);
+            this.scene.add(this.particles[i].mesh);
+
+          }.bind(this), 200 * i, i);
+      };
   }
 
   addObjects()
   {
     // var gridHelper = new THREE.GridHelper( 100, 10 );        
     // this.scene.add( gridHelper );
+
+    this.particles = new Array(200);
+    this.addParticles();
 
     this.shapeMaterial = new THREE.MeshBasicMaterial({transparent: true, opacity: .3});
 
@@ -117,6 +177,7 @@ class InteractiveLayer {
         gradientsLeft     : {type : 'v4', value : this.leftColors[gradient]},
         gradientsRight    : {type : 'v4', value : this.rightColors[gradient]}
       },
+      side : THREE.DoubleSide,
       wireframe      : true,
       vertexShader   : glslify('./shader/vertex.vert'),
       fragmentShader : glslify('./shader/frag.frag')
@@ -156,7 +217,7 @@ class InteractiveLayer {
   //   let vmin = Math.min(window.innerWidth, window.innerHeight);
 
   //   let boxSize = (vmax / vmin) * this.planeSize >> 0;
-  //   let resX = UtilsP.round(vmax / boxSize);
+  //   let resX = Utils.round(vmax / boxSize);
   //   let offset = (boxSize + (boxSize * (this.planeSize / 10000)))
   //   let totalWidth = offset * resX / 2;
 
@@ -204,54 +265,23 @@ class InteractiveLayer {
   update()
   {
     this.stats.begin();
+    let dt = this.clock.getDelta();
+    let time = this.clock.getElapsedTime();
 
-    this.material.wireframe                  = this.wireframe;
-    this.material.uniforms.time.value        = this.clock.getElapsedTime();
-    this.material.uniforms.mouse.value       = this.mouse;
-    this.material.uniforms.power.value       = this.power;
-    this.material.uniforms.radius.value      = this.radius;
-    this.material.uniforms.showTexture.value = Number(this.showTexture);
+    for (var i = this.particles.length - 1; i >= 0; i--) {
+        if(this.particles[i]) {
+          this.particles[i].update(dt, time);
+        }
+    };
+
+    this.material.wireframe                        = this.wireframe;
+    this.material.uniforms.time.value              = this.clock.getElapsedTime();
+    this.material.uniforms.mouse.value             = this.mouse;
+    this.material.uniforms.power.value             = this.power;
+    this.material.uniforms.radius.value            = this.radius;
+    this.material.uniforms.showTexture.value       = Number(this.showTexture);
     this.material.uniforms.displacementPower.value = this.displacementPower;
     
-    this.material.needsUpdate = true;
-
-    // this.activeGOL = [];
-
-    // if(this.world.started && this.showGameOfLife)
-    // {
-    //   if(this.counter % 60 == 0)
-    //   {
-    //     let howManyActive = [];
-    //     this.grid = this.world.update();
-    //     // +=4 as you just need the first value of the GoL 255 or 0
-    //     for (let i = 0; i < this.grid.length; i+=4) {
-    //         let line = this.grid[i];
-    //         // line[a] element true/false
-    //         let lineBoxes = this.boxes[(i/4) >> 0];
-    //         if(line == 255) 
-    //         {
-    //           howManyActive.push(i);
-    //           let xx = lineBoxes.position.x;
-    //           let yy = lineBoxes.position.y;
-
-    //           this.activeGOL.push(new THREE.Vector2(xx, yy));
-    //         }
-    //         lineBoxes.visible = line == 255;
-    //     }
-
-    //     this.material.uniforms.points.value = this.activeGOL
-
-    //     if((howManyActive.length / 4) >> 0 < 2)
-    //     {
-    //       this.world.init();
-    //     }
-    //   }
-
-    //   this.counter++;
-    // } else {
-    //   this.removeAll();
-    // }
-
     this.renderer.render(this.scene, this.camera);
 
     this.stats.end()
@@ -291,10 +321,47 @@ class InteractiveLayer {
     this.camera.top = window.innerHeight / 2;
     this.camera.bottom = window.innerHeight / - 2;
 
-    this.camera.updateProjectionMatrix();
     // this.camera.aspect = window.innerWidth / this.HEIGHT;
-    // this.camera.updateProjectionMatrix();
+    this.camera.updateProjectionMatrix();
   }
 }
 
 export default InteractiveLayer;
+
+
+// this.activeGOL = [];
+
+// if(this.world.started && this.showGameOfLife)
+// {
+//   if(this.counter % 60 == 0)
+//   {
+//     let howManyActive = [];
+//     this.grid = this.world.update();
+//     // +=4 as you just need the first value of the GoL 255 or 0
+//     for (let i = 0; i < this.grid.length; i+=4) {
+//         let line = this.grid[i];
+//         // line[a] element true/false
+//         let lineBoxes = this.boxes[(i/4) >> 0];
+//         if(line == 255) 
+//         {
+//           howManyActive.push(i);
+//           let xx = lineBoxes.position.x;
+//           let yy = lineBoxes.position.y;
+
+//           this.activeGOL.push(new THREE.Vector2(xx, yy));
+//         }
+//         lineBoxes.visible = line == 255;
+//     }
+
+//     this.material.uniforms.points.value = this.activeGOL
+
+//     if((howManyActive.length / 4) >> 0 < 2)
+//     {
+//       this.world.init();
+//     }
+//   }
+
+//   this.counter++;
+// } else {
+//   this.removeAll();
+// }
