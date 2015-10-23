@@ -123,7 +123,7 @@ class InteractiveLayer {
         new THREE.CircleGeometry(10, 32),
         new THREE.PlaneBufferGeometry(10, 10),
         new THREE.BoxGeometry(20, 20, 20),
-        new THREE.IcosahedronGeometry(20, 3)
+        new THREE.IcosahedronGeometry(20, 0)
       ];
 
       for (var i = this.particles.length - 1; i >= 0; i--) {
