@@ -1,10 +1,11 @@
 import THREE    from 'three.js'; 
-// var THREE = require('../three/three');
+// var THREE   = require('../three/three');
 import dat      from 'dat-gui' ;
 import Stats    from 'stats-js' ;
-import Utils   from 'utils-perf';
+import Utils    from 'utils-perf';
 import TweenMax from 'gsap';
-import Paper from './Paper';
+
+import SymbolGenerator from './SymbolGenerator';
 
 const OrbitControls = require('three-orbit-controls')(THREE);
 // const GoL          = require('gof-gpu');
@@ -18,7 +19,7 @@ class InteractiveLayer {
     this.wireframe         = false;
     this.radius            = 100;
     this.displacementPower = 2;
-    this.showTexture       = true;
+    this.showTexture       = false;
     this.currentGradient   = 0;
     // this.showGameOfLife    = true;
     // this.planeSize         = 150;
@@ -55,7 +56,7 @@ class InteractiveLayer {
     this.stats = new Stats(); 
     this.stats.domElement.style.position = 'absolute';
     this.stats.domElement.style.top = "50px";
-    // this.stats.domElement.style.display = 'none';
+    this.stats.domElement.style.display = 'none';
     document.body.appendChild(this.stats.domElement);
   }
 
@@ -79,61 +80,6 @@ class InteractiveLayer {
     // this.controls.maxDistance = 500;
 
     this.scene = new THREE.Scene();
-    this.light = new THREE.DirectionalLight(0xcccccc);
-    this.light.position.z = 10;
-    this.scene.add(this.light);
-
-    // this.scene.add(new THREE.AmbientLight(0xFFFFFF));
-  }
-
-  addParticles()
-  {
-    // this.colours = [
-    //     new THREE.MeshPhongMaterial({color:new THREE.Color('#333333'), side:THREE.DoubleSide }),
-    //     new THREE.MeshPhongMaterial({color:new THREE.Color('#cccccc'), side:THREE.DoubleSide })
-    // ]
-
-      this.colours = [
-        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(246, 199, 217)") , side: THREE.DoubleSide } ),
-        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(246, 227, 31)") , side: THREE.DoubleSide } ),
-        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(92, 186, 80)") , side: THREE.DoubleSide } ),
-        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(101, 48, 141)") , side: THREE.DoubleSide } ),
-        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(237, 34, 44)") , side: THREE.DoubleSide } ),
-        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(104, 48, 143)") , side: THREE.DoubleSide } ),
-        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(102, 182, 87)") , side: THREE.DoubleSide } ),
-        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(97, 201, 234)") , side: THREE.DoubleSide } ),
-        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(97, 200, 232)") , side: THREE.DoubleSide } ),
-        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(248, 225, 5)") , side: THREE.DoubleSide } ), 
-
-        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(246, 199, 217)") , wireframe: true, side: THREE.DoubleSide } ),
-        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(246, 227, 31)") , wireframe: true, side: THREE.DoubleSide } ),
-        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(92, 186, 80)") , wireframe: true, side: THREE.DoubleSide } ),
-        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(101, 48, 141)") , wireframe: true, side: THREE.DoubleSide } ),
-        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(237, 34, 44)") , wireframe: true, side: THREE.DoubleSide } ),
-        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(104, 48, 143)") , wireframe: true, side: THREE.DoubleSide } ),
-        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(102, 182, 87)") , wireframe: true, side: THREE.DoubleSide } ),
-        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(97, 201, 234)") , wireframe: true, side: THREE.DoubleSide } ),
-        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(97, 200, 232)") , wireframe: true, side: THREE.DoubleSide } ),
-        new THREE.MeshPhongMaterial({color: new THREE.Color("rgb(248, 225, 5)") , wireframe: true, side: THREE.DoubleSide } ), 
-      ];
-
-      this.colours = Utils.randomArray(this.colours);
-
-      this.geos = [
-        new THREE.CircleGeometry(10, 32),
-        new THREE.PlaneBufferGeometry(10, 10),
-        new THREE.BoxGeometry(20, 20, 20),
-        new THREE.IcosahedronGeometry(20, 0)
-      ];
-
-      for (var i = this.particles.length - 1; i >= 0; i--) {
-          setTimeout(function(i)
-          {
-            this.particles[i] = new Paper(this.geos[i % (this.geos.length - 1)], this.colours[i % (this.colours.length - 1)]);
-            this.scene.add(this.particles[i].mesh);
-
-          }.bind(this), 200 * i, i);
-      };
   }
 
   addObjects()
@@ -141,8 +87,8 @@ class InteractiveLayer {
     // var gridHelper = new THREE.GridHelper( 100, 10 );        
     // this.scene.add( gridHelper );
 
-    this.particles = new Array(200);
-    this.addParticles();
+    this.objects = new SymbolGenerator();
+    this.scene.add(this.objects.container);
 
     this.shapeMaterial = new THREE.MeshBasicMaterial({transparent: true, opacity: .3});
 
@@ -252,6 +198,7 @@ class InteractiveLayer {
 
   startGUI()
   {
+    return;
     var gui = new dat.GUI()
     gui.add(this, 'wireframe');
 
@@ -268,11 +215,7 @@ class InteractiveLayer {
     let dt = this.clock.getDelta();
     let time = this.clock.getElapsedTime();
 
-    for (var i = this.particles.length - 1; i >= 0; i--) {
-        if(this.particles[i]) {
-          this.particles[i].update(dt, time);
-        }
-    };
+    this.objects.update(time * .001);
 
     this.material.wireframe                        = this.wireframe;
     this.material.uniforms.time.value              = this.clock.getElapsedTime();
