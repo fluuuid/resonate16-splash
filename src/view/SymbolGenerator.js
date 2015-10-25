@@ -91,7 +91,7 @@ class SymbolGenerator {
 
     // ### attributes ###
     let stageScl = window.innerWidth > window.innerHeight ? 1 : .3;
-    let scl = 1 + Math.round( 3 * Math.random() ) * stageScl;
+    let scl = (1 + Math.round( 3 * Math.random() )) * stageScl;
     let rot = this.rotations[ Math.round( Math.random() * ( this.rotations.length - 1 ) ) ]
     let ci = Math.round( Math.random() * ( this.colors1.length - 1 ) )
     let inverseColors = Math.random() < .5
