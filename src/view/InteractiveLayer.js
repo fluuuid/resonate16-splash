@@ -141,15 +141,16 @@ class InteractiveLayer {
   onLoaded(obj)
   {
     let bgeo = obj.children[0].geometry;
-    bgeo.scale(.7, .7, .7);
+    let scl = window.innerWidth > window.innerHeight ? .7 : .4;
+    bgeo.scale(scl, scl, scl);
 
     let nv = bgeo.attributes.position.array.length;
     let p = new Float32Array(nv);
     bgeo.addAttribute('duration', new THREE.BufferAttribute(p, 1));
 
     this.objectMesh = new THREE.Mesh(bgeo, this.material);
-    this.objectMesh.position.x = 40;
-    this.objectMesh.position.y = -40;
+    this.objectMesh.position.x = window.innerWidth > window.innerHeight ? 40 : 15;
+    this.objectMesh.position.y = window.innerWidth > window.innerHeight ? -40 : -20;
 
     this.scene.add(this.objectMesh);
   }

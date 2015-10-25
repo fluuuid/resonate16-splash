@@ -8,7 +8,7 @@
 
 @media only screen and (max-width: 700px) {
     :root {
-        font-size: 16px;
+        font-size: 15px;
     }
 }
 
@@ -44,8 +44,8 @@ main
     }
 }
 
-*[data-type="desktop"] { display: -webkit-flex; display: flex; }
-*[data-type="mobile"] { display: none; }
+section[data-type="desktop"] { display: -webkit-flex; display: flex; }
+section[data-type="mobile"] { display: none; }
 
 h1
 {
@@ -88,7 +88,8 @@ nav > div
     width: 50%;
 }
 
-nav > div:last-child { text-align: right; }
+nav > div.menu { text-align: right; }
+nav > div.small {display: none; }
 
 nav > div > a
 {
@@ -110,6 +111,79 @@ nav > div > a.header
     margin-right: 0;
 }
 
+nav > div.burger
+{
+    display: none;
+    text-align: right;
+    font-size: 25px;
+    margin: 10px 15px;
+    padding: 0;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 900px) {
+
+    nav > div.small {display: block; }
+    nav > div.large {display: none; }
+
+    nav > div > a.header
+    {
+        font-size: 20px;
+        font-size: 1rem;
+    }
+    nav > div 
+    {
+        padding: 10px;
+        width: 100%;
+    }
+
+    nav > div.burger
+    {
+        display: block;
+        max-width: 25px;
+    }
+
+    nav > div.menu
+    {
+        position: absolute;
+        display: flex;
+        display: -webkit-flex;
+        flex-direction : row;
+        flex-wrap : wrap;
+        background-color: #62318d;
+        width: 100vw;
+        height: 90vh;
+        margin: 57px 0;
+        padding-top: 15px;
+        left: 0;
+        text-align: center;
+        -webkit-transition: tranform, .5s, cubic-bezier(0.45, 0.05, 0.52, 0.96);
+           -moz-transition: tranform, .5s, cubic-bezier(0.45, 0.05, 0.52, 0.96);
+             -o-transition: tranform, .5s, cubic-bezier(0.45, 0.05, 0.52, 0.96);
+                transition: tranform, .5s, cubic-bezier(0.45, 0.05, 0.52, 0.96);
+
+        transform: translateX(100%);
+    }
+
+    nav[data-active="true"] > div.menu
+    {
+        transform: translateX(0%);
+    }
+
+    nav > div.menu > a
+    {
+        display: block;
+        width: 100%;
+        font-size: 30px;
+    }
+
+    nav > div.menu > a:hover
+    {
+        border: 0;
+    }
+}
+
+
 header
 {
     background-color: black;
@@ -118,10 +192,16 @@ header
 
 header div.container
 {
+    text-align: center;
     position: absolute;
     bottom: 10%;
-    text-align: center;
-    width: 100%;
+    max-width: 100%;
+    min-width: 100%;
+}
+
+header div.container > p
+{
+    padding: 0 10%;
 }
 
 header div.container > p > a
@@ -401,8 +481,8 @@ section > div:last-child {
     section.mobile.purple > div { color: #62318d !important; }
     section.mobile.white > div { color: white !important; }
 
-    *[data-type="desktop"] { display: none; }
-    *[data-type="mobile"] { display: -webkit-flex; display: flex; }
+    section[data-type="desktop"] { display: none; }
+    section[data-type="mobile"] { display: -webkit-flex; display: flex; }
 
     hr
     {
