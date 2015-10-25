@@ -177,9 +177,9 @@ nav > div.burger
         font-size: 30px;
     }
 
-    nav > div.menu > a:hover
+    nav > div.menu > a
     {
-        border: 0;
+        border-bottom: 0 solid transparent;
     }
 }
 
@@ -212,6 +212,12 @@ header div.container > p > a
 header div.container > p > a:hover
 {
     border-bottom: 1px solid white;
+}
+@media only screen and (max-width: 900px) {
+    header div.container > p > a:hover
+    {
+        border-bottom: 1px solid transparent;       
+    }   
 }
 
 header div.container > img.logo 
