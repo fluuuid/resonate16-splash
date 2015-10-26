@@ -1,17 +1,25 @@
 import Wallop from "wallop";
+import eve from 'dom-events';
 
 class Gallery  {
   constructor() {
 
-    let list = document.querySelector('.Wallop-list');
+    let list = document.querySelector('div.Wallop-list');
     this.interval = 7000;
 
-    for (var i = 0; i < window.PHOTOS.length; i++) {
-        let div = document.createElement('div');
-        div.className = 'Wallop-item'
-        div.style.backgroundImage = 'url("static/gallery/'+window.PHOTOS[i]+'")'
-        list.appendChild(div);
+    this.buttons = document.querySelectorAll('.wallop-button');
+    for (var i = 0; i < this.buttons.length; i++) {
+        eve.on(this.buttons[i], 'click', this.clickGallery.bind(this));
+        this.buttons[i]
     };
+
+    let divContent = "";
+
+    for (var i = 0; i < window.PHOTOS.length; i++) {
+        divContent += "<div class='Wallop-item' style='background-image:url(\"static/gallery/" + window.PHOTOS[i] + "\");'></div>"
+    };
+
+    list.innerHTML = divContent;
 
     this.wallop = new Wallop(document.querySelector('.Wallop'));
     this.wallop.on('change', function(event){
@@ -21,6 +29,20 @@ class Gallery  {
     }.bind(this))
 
     this.intervalLoopPhoto = setInterval(this.wallop.next.bind(this.wallop), this.interval);
+  }
+
+  clickGallery(e)
+  {
+    switch(e.currentTarget.dataset.dir)
+    {
+        case "next":
+            this.wallop.next();
+            break;
+
+        case "prev":
+            this.wallop.previous();
+            break;
+    }
   }
 }
 

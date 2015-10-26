@@ -39,7 +39,7 @@
 
     <link rel="stylesheet" type="text/css" href="css/normalise.min.css">
     <link rel="stylesheet" type="text/css" href="css/wallop.css">
-    <link rel="stylesheet" type="text/css" href="css/wallop--slide.css">
+    <link rel="stylesheet" type="text/css" href="css/wallop--fade.css">
     <link rel="stylesheet" type="text/css" href="css/main.css">
     <style type="text/css">
     .ac
@@ -73,36 +73,13 @@
 
     <header>
         <div class="gallery">
-            <div class="Wallop Wallop--slide">
+            <div class="Wallop Wallop--fade">
                 <div class="Wallop-list"></div>
-                <button class="wallop-button Wallop-buttonPrevious">
-                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                         width="60px" height="60px" viewBox="0 0 60 60" enable-background="new 0 0 60 60" xml:space="preserve">
-                    <g id="Layer_2_1_" opacity="0.3">
-                        <path d="M45.66,18.738l2.705,2.715L29.511,40.367l-2.706-2.715L45.66,18.738z"/>
-                        <path d="M10.387,21.318l2.677-2.685l19.122,19.048l-2.674,2.686L10.387,21.318z"/>
-                    </g>
-                    <g id="Layer_2">
-                        <path fill="#FFFFFF" d="M46.66,18.738l2.705,2.715L30.512,40.367l-2.707-2.715L46.66,18.738z"/>
-                        <path fill="#FFFFFF" d="M11.387,21.318l2.677-2.685l19.122,19.048l-2.674,2.686L11.387,21.318z"/>
-                    </g>
-                    </svg>
-                </button>
-                <button class="wallop-button Wallop-buttonNext">
-                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                         width="60px" height="60px" viewBox="0 0 60 60" enable-background="new 0 0 60 60" xml:space="preserve">
-                    <g id="Layer_2_1_" opacity="0.3">
-                        <path d="M45.66,18.738l2.705,2.715L29.511,40.367l-2.706-2.715L45.66,18.738z"/>
-                        <path d="M10.387,21.318l2.677-2.685l19.122,19.048l-2.674,2.686L10.387,21.318z"/>
-                    </g>
-                    <g id="Layer_2">
-                        <path fill="#FFFFFF" d="M46.66,18.738l2.705,2.715L30.512,40.367l-2.707-2.715L46.66,18.738z"/>
-                        <path fill="#FFFFFF" d="M11.387,21.318l2.677-2.685l19.122,19.048l-2.674,2.686L11.387,21.318z"/>
-                    </g>
-                    </svg>
-                </button>    
             </div>
         </div>
+
+        <button data-dir="prev" class="wallop-button Wallop-buttonPrevious"><img src="static/arrow.svg"></button>
+        <button data-dir="next" class="wallop-button Wallop-buttonNext"><img src="static/arrow.svg"></button>
 
         <div class="canvas-container"></div>
 
@@ -111,17 +88,7 @@
         </div>
 
         <div class="arrow-container">
-            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                 width="60px" height="60px" viewBox="0 0 60 60" enable-background="new 0 0 60 60" xml:space="preserve">
-            <g id="Layer_2_1_" opacity="0.3">
-                <path d="M45.66,18.738l2.705,2.715L29.511,40.367l-2.706-2.715L45.66,18.738z"/>
-                <path d="M10.387,21.318l2.677-2.685l19.122,19.048l-2.674,2.686L10.387,21.318z"/>
-            </g>
-            <g id="Layer_2">
-                <path fill="#FFFFFF" d="M46.66,18.738l2.705,2.715L30.512,40.367l-2.707-2.715L46.66,18.738z"/>
-                <path fill="#FFFFFF" d="M11.387,21.318l2.677-2.685l19.122,19.048l-2.674,2.686L11.387,21.318z"/>
-            </g>
-            </svg>
+            <img src="static/arrow.svg">
         </div>
     </header>
 

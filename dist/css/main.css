@@ -79,7 +79,7 @@ nav
     position: fixed;
     display: -webkit-flex;
     display: flex;
-    z-index: 2;
+    z-index: 50;
 }
 
 nav > div
@@ -197,6 +197,7 @@ header div.gallery
     left: 0;
     width: 100vw;
     height: 100vh;
+    z-index: 1;
 }
 
 .Wallop-list
@@ -220,6 +221,7 @@ header div.gallery
     border: none;
     -webkit-transition: all, .3s ease-in-out;
     transition: all, .3s ease-in-out;
+    pointer-events: visible;
 }
 
 .wallop-button:focus {outline:0;}
@@ -229,9 +231,9 @@ header div.gallery
     position: absolute;
     top: 50%;
     right: 10px;
-    z-index: 31;
-    transform: rotate(-90deg);
-    -webkit-transform: rotate(-90deg);
+    z-index: 100;
+    transform: translateY(-50%) rotate(-90deg);
+    -webkit-transform: translateY(-50%) rotate(-90deg);
 }
 
 .Wallop-buttonNext:hover
@@ -244,9 +246,9 @@ header div.gallery
     position: absolute;
     top: 50%;
     left: 10px;
-    z-index: 30;
-    transform: rotate(90deg);
-    -webkit-transform: rotate(90deg);
+    z-index: 101;
+    transform: translateY(-50%) rotate(90deg);
+    -webkit-transform: translateY(-50%) rotate(90deg);
 }
 
 .Wallop-buttonPrevious:hover
@@ -257,6 +259,7 @@ header div.gallery
 .canvas-container
 {
     position: absolute;
+    z-index: 2;
 }
 
 header div.container
@@ -266,6 +269,7 @@ header div.container
     bottom: 10%;
     max-width: 100%;
     min-width: 100%;
+    z-index: 3;
 }
 
 header div.container > p
@@ -300,6 +304,7 @@ header div.container > img.logo
     cursor: pointer;
     position: absolute;
     bottom: 20px;
+    z-index: 4;
     left: 50%;
     transform: translateX(-50%);
     -webkit-transform: translateX(-50%);
