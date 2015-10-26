@@ -198,6 +198,9 @@ header div.gallery
     width: 100vw;
     height: 100vh;
     z-index: 1;
+    opacity: 0;
+    -webkit-transition: opacity, 1s ease-in-out;
+    transition: opacity, 1s ease-in-out;
 }
 
 .Wallop-list

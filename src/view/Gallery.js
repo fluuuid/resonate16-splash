@@ -28,6 +28,13 @@ class Gallery  {
         this.intervalLoopPhoto = setInterval(this.wallop.next.bind(this.wallop), this.interval);
     }.bind(this))
 
+    setInterval(this.start.bind(this), 3000);
+  }
+
+  start()
+  {
+    let gallery = document.querySelector('.gallery');
+    gallery.style.opacity = 1;
     this.intervalLoopPhoto = setInterval(this.wallop.next.bind(this.wallop), this.interval);
   }
 
