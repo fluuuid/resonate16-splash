@@ -223,6 +223,10 @@ header div.gallery
     transition: all, .3s ease-in-out;
     pointer-events: visible;
 }
+.wallop-button > img
+{
+    pointer-events: none;   
+}
 
 .wallop-button:focus {outline:0;}
 
