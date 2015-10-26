@@ -190,6 +190,75 @@ header
     height: 100vh;
 }
 
+header div.gallery
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+.Wallop-list
+{
+    width: 100vw;
+    height: 100vh;
+}
+
+.Wallop-item
+{
+    width: 100vw;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.wallop-button 
+{
+    background-color: transparent;
+    border: none;
+    -webkit-transition: all, .3s ease-in-out;
+    transition: all, .3s ease-in-out;
+}
+
+.wallop-button:focus {outline:0;}
+
+.Wallop-buttonNext
+{
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    z-index: 31;
+    transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+}
+
+.Wallop-buttonNext:hover
+{
+    right: 0%;
+}
+
+.Wallop-buttonPrevious
+{
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    z-index: 30;
+    transform: rotate(90deg);
+    -webkit-transform: rotate(90deg);
+}
+
+.Wallop-buttonPrevious:hover
+{
+    left: 0%;
+}
+
+.canvas-container
+{
+    position: absolute;
+}
+
 header div.container
 {
     text-align: center;
@@ -226,15 +295,14 @@ header div.container > img.logo
     padding-bottom: 5vh;
 }
 
-header > img.arrow
+.arrow-container
 {
-    height: 30px;
+    cursor: pointer;
     position: absolute;
     bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
     -webkit-transform: translateX(-50%);
-
     -webkit-animation: arrow-bottom 1.3s infinite ease-in-out;
           animation: arrow-bottom 1.3s infinite ease-in-out; 
 }
