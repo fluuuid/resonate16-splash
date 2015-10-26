@@ -33,6 +33,7 @@ class Gallery  {
 
   clickGallery(e)
   {
+    console.log(e.currentTarget.dataset.dir);
     switch(e.currentTarget.dataset.dir)
     {
         case "next":
