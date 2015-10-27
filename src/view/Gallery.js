@@ -28,7 +28,7 @@ class Gallery  {
         this.intervalLoopPhoto = setInterval(this.wallop.next.bind(this.wallop), this.interval);
     }.bind(this))
 
-    setInterval(this.start.bind(this), 3000);
+    setTimeout(this.start.bind(this), 3000);
   }
 
   start()
