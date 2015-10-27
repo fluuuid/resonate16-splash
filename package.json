@@ -13,7 +13,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "budo --dir dist/ src/index.js:js/bundle.js --live -- -t babelify -t glslify | garnish",
-    "build": "browserify -t babelify -t glslify src/index.js | uglifyjs -cm > dist/js/bundle.js"
+    "build": "browserify -t babelify -t glslify src/index.js | uglifyjs -cm > dist/js/bundle.js",
+    "deploy": "dploy resonate_staging"
   },
   "devDependencies": {
     "babelify": "^6.3.0",
@@ -34,7 +35,8 @@
     "uglifyjs": "^2.4.10",
     "utils-perf": "^1.1.1",
     "wallop": "^2.2.3",
-    "watchify": "^3.2.3"
+    "watchify": "^3.2.3",
+    "dploy": "^1.2.0"
   },
   "main": "index.js",
   "description": "",

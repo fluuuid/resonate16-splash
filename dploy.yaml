@@ -1,0 +1,32 @@
+resonate_staging:
+    scheme: ftp
+    host: ftp.resonate.io
+    port: 21
+    user: magfieldb
+    pass: Qqr7RHyuZfO9Ei
+    check: true
+    path:
+        local: dist/
+        remote: /www.resonate.io/web/content/_2016/
+
+stage:
+    scheme: ftp
+    host: ftp.my-stage-server.com
+    port: 21
+    user: user
+    pass: password
+    check: true
+    path:
+        local: release/
+        remote: public_html/
+
+live:
+    scheme: ftp
+    host: ftp.my-live-server.com
+    port: 21
+    user: user
+    pass: password
+    check: true
+    path:
+        local: release/
+        remote: public_html/
