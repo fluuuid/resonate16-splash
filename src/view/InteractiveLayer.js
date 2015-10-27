@@ -6,6 +6,7 @@ import Utils    from 'utils-perf';
 import TweenMax from 'gsap';
 
 import SymbolGenerator from './SymbolGenerator';
+import Logo from './Logo';
 
 const OrbitControls = require('three-orbit-controls')(THREE);
 // const GoL          = require('gof-gpu');
@@ -83,133 +84,28 @@ class InteractiveLayer {
     this.scene = new THREE.Scene();
   }
 
+  onKeyDown ( e ) {
+    switch (e.keyCode) {
+      case  71 :  // g
+        this.generator.grid.active = !this.generator.grid.active;
+    }
+  }
+
   addObjects()
   {
     // var gridHelper = new THREE.GridHelper( 100, 10 );        
     // this.scene.add( gridHelper );
 
-    this.objects = new SymbolGenerator();
-    this.scene.add(this.objects.container);
+    this.generator = new SymbolGenerator(0);
+    this.scene.add(this.generator.container);
 
-    // this.shapeMaterial = new THREE.MeshBasicMaterial({transparent: true, opacity: .3});
+    this.logo = new Logo(this.generator);
+    this.scene.add(this.logo.container);
 
-    // this.leftColors = [
-    //   new THREE.Vector4(246 / 255, 199 / 255, 217 / 255, 1.0),
-    //   new THREE.Vector4(246 / 255, 227 / 255, 31 / 255, 1.0),
-    //   new THREE.Vector4(92 / 255, 186 / 255, 80 / 255, 1.0),
-    //   new THREE.Vector4(101 / 255, 48 / 255, 141 / 255, 1.0),
-    //   new THREE.Vector4(237 / 255, 34 / 255, 44 / 255, 1.0)
-    // ];
-
-    // this.rightColors = [
-    //   new THREE.Vector4(104 / 255, 48 / 255, 143 / 255, 1.0),
-    //   new THREE.Vector4(102 / 255, 182 / 255, 87 / 255, 1.0),
-    //   new THREE.Vector4(97 / 255, 201 / 255, 234 / 255, 1.0),
-    //   new THREE.Vector4(97 / 255, 200 / 255, 232 / 255, 1.0),
-    //   new THREE.Vector4(248 / 255, 225 / 255, 5 / 255, 1.0)
-    // ]
-
-    // let gradient = (this.leftColors.length * Math.random()) >> 0;
-
-    // this.material = new THREE.ShaderMaterial( {
-    //   uniforms: {
-    //     time              : {type: 'f', value: 0},
-    //     color             : {type: 'c', value: new THREE.Color(0xffffff) },
-    //     power             : {type: 'f', value: 0},
-    //     radius            : {type: 'f', value: this.radius},
-    //     displacementPower : {type: 'f', value: this.radius},
-    //     resolution        : {type: 'v2', value: new THREE.Vector2(window.innerWidth,window.innerHeight)},
-    //     mouse             : {type: 'v2', value: new THREE.Vector2(0,0)},
-    //     showTexture       : {type: 'i', value: Number(this.showTexture)},
-    //     gradientsLeft     : {type : 'v4', value : this.leftColors[gradient]},
-    //     gradientsRight    : {type : 'v4', value : this.rightColors[gradient]}
-    //   },
-    //   side : THREE.DoubleSide,
-    //   wireframe      : true,
-    //   vertexShader   : glslify('./shader/vertex.vert'),
-    //   fragmentShader : glslify('./shader/frag.frag')
-
-    // } );
-
-    // // this.addPlanes();
-
-    // this.loader = new THREE.OBJLoader();
-    // this.loader.load('static/r.obj', this.onLoaded.bind(this));
-
-    
+    window.addEventListener("mousemove", this.logo.onMouseMove.bind(this.logo), false);
+    window.addEventListener("keydown", this.onKeyDown.bind(this), false);
   }
 
-  // onLoaded(obj)
-  // {
-  //   let bgeo = obj.children[0].geometry;
-  //   let scl = window.innerWidth > window.innerHeight ? .7 : .4;
-  //   bgeo.scale(scl, scl, scl);
-
-  //   let nv = bgeo.attributes.position.array.length;
-  //   let p = new Float32Array(nv);
-  //   bgeo.addAttribute('duration', new THREE.BufferAttribute(p, 1));
-
-  //   this.objectMesh = new THREE.Mesh(bgeo, this.material);
-  //   this.objectMesh.position.x = window.innerWidth > window.innerHeight ? 40 : 15;
-  //   this.objectMesh.position.y = window.innerWidth > window.innerHeight ? -40 : -20;
-
-  //   this.scene.add(this.objectMesh);
-  // }
-
-  // addPlanes()
-  // {
-  //   if(this.golContainer) this.removeAll();
-  //   this.golContainer = new THREE.Object3D();
-
-  //   let vmax = Math.max(window.innerWidth, window.innerHeight);
-  //   let vmin = Math.min(window.innerWidth, window.innerHeight);
-
-  //   let boxSize = (vmax / vmin) * this.planeSize >> 0;
-  //   let resX = Utils.round(vmax / boxSize);
-  //   let offset = (boxSize + (boxSize * (this.planeSize / 10000)))
-  //   let totalWidth = offset * resX / 2;
-
-  //   this.world = new GoL(resX);
-  //   this.boxes = [];
-  //   let counter = 0;
-
-  //   this.geo = new THREE.PlaneBufferGeometry(boxSize, boxSize);
-
-  //   for (var x = 0; x < resX; x++) {
-  //       for (var y = 0; y < resX; y++) {
-  //           var b = new THREE.Mesh(this.geo, this.shapeMaterial);
-  //           b.position.x = totalWidth - (x * offset);
-  //           b.position.y = totalWidth - (y * offset);
-  //           this.golContainer.add(b)
-  //           this.boxes.push(b);
-  //           counter++;
-  //       }
-  //   };
-
-  //   this.scene.add(this.golContainer);
-  // }
-
-  // removeAll()
-  // {
-  //   for (var i = this.boxes.length - 1; i >= 0; i--) {
-  //       this.golContainer.remove(this.boxes[i]);
-  //   };
-
-  //   this.scene.remove(this.golContainer);
-  // }
-
-  // startGUI()
-  // {
-  //   return;
-  //   var gui = new dat.GUI()
-  //   gui.add(this, 'wireframe');
-
-  //   // gui.add(this, 'showGameOfLife').onChange(this.addPlanes.bind(this));
-  //   // gui.add(this, 'planeSize', 50, 300).onChange(this.addPlanes.bind(this));
-  //   gui.add(this, 'showTexture');
-  //   gui.add(this, 'radius', 1, 500);
-  //   gui.add(this, 'displacementPower', 1, 10);
-  // }
 
   update()
   {
@@ -217,21 +113,12 @@ class InteractiveLayer {
     let dt = this.clock.getDelta();
     let time = this.clock.getElapsedTime();
 
-    this.objects.update(time * .001);
+    this.generator.update(time * .001);
+    if(this.logo.logo) this.logo.logo.material.uniforms.time.value = time ;
 
-    // this.material.wireframe                        = this.wireframe;
-    // this.material.uniforms.time.value              = this.clock.getElapsedTime();
-    // this.material.uniforms.mouse.value             = this.mouse;
-    // this.material.uniforms.power.value             = this.power;
-    // this.material.uniforms.radius.value            = this.radius;
-    // this.material.uniforms.showTexture.value       = Number(this.showTexture);
-    // this.material.uniforms.displacementPower.value = this.displacementPower;
-    
     this.renderer.render(this.scene, this.camera);
 
     this.stats.end()
-
-    // this.mouse.x = this.mouse.y = 10000.;
 
     requestAnimationFrame(this.update.bind(this));
   }
@@ -241,18 +128,6 @@ class InteractiveLayer {
     return window.innerHeight;
   }
 
-  // onMouseMove(e)
-  // {
-  //   let currentMouse = new THREE.Vector2(e.clientX, e.clientY);
-
-  //   // this.power = this.prevMouse.distanceTo(currentMouse);
-
-  //   this.mouse.x = e.clientX - (window.innerWidth / 2);
-  //   this.mouse.y = (window.innerHeight / 2) - e.clientY ;
-
-  //   this.prevMouse = new THREE.Vector2(e.clientX, e.clientY);
-  // }
-
   onResize()
   {
     this.HEIGHT = this.getHeaderHight();
@@ -260,6 +135,14 @@ class InteractiveLayer {
     this.renderer.setSize(window.innerWidth, this.HEIGHT);
 
     // this.material.uniforms.resolution.value = new THREE.Vector2(window.innerWidth, window.innerHeight);
+
+    if(this.logo.logo)
+    {
+      let scl = this.generator.grid.cellSize * 4 / 100;
+      this.logo.logo.scale.set( scl, scl, scl);
+      this.logo.logo.position.x = scl * 2.5;
+    }
+          
 
     this.camera.left = window.innerWidth / - 2;
     this.camera.right = window.innerWidth / 2;
@@ -273,6 +156,143 @@ class InteractiveLayer {
 
 export default InteractiveLayer;
 
+
+// this.material.wireframe                        = this.wireframe;
+    // this.material.uniforms.time.value              = this.clock.getElapsedTime();
+    // this.material.uniforms.mouse.value             = this.mouse;
+    // this.material.uniforms.power.value             = this.power;
+    // this.material.uniforms.radius.value            = this.radius;
+    // this.material.uniforms.showTexture.value       = Number(this.showTexture);
+    // this.material.uniforms.displacementPower.value = this.displacementPower;
+
+// onMouseMove(e)
+  // {
+  //   let currentMouse = new THREE.Vector2(e.clientX, e.clientY);
+
+  //   // this.power = this.prevMouse.distanceTo(currentMouse);
+
+  //   this.mouse.x = e.clientX - (window.innerWidth / 2);
+  //   this.mouse.y = (window.innerHeight / 2) - e.clientY ;
+
+  //   this.prevMouse = new THREE.Vector2(e.clientX, e.clientY);
+  // }
+
+ // this.shapeMaterial = new THREE.MeshBasicMaterial({transparent: true, opacity: .3});
+
+  // this.leftColors = [
+  //   new THREE.Vector4(246 / 255, 199 / 255, 217 / 255, 1.0),
+  //   new THREE.Vector4(246 / 255, 227 / 255, 31 / 255, 1.0),
+  //   new THREE.Vector4(92 / 255, 186 / 255, 80 / 255, 1.0),
+  //   new THREE.Vector4(101 / 255, 48 / 255, 141 / 255, 1.0),
+  //   new THREE.Vector4(237 / 255, 34 / 255, 44 / 255, 1.0)
+  // ];
+
+  // this.rightColors = [
+  //   new THREE.Vector4(104 / 255, 48 / 255, 143 / 255, 1.0),
+  //   new THREE.Vector4(102 / 255, 182 / 255, 87 / 255, 1.0),
+  //   new THREE.Vector4(97 / 255, 201 / 255, 234 / 255, 1.0),
+  //   new THREE.Vector4(97 / 255, 200 / 255, 232 / 255, 1.0),
+  //   new THREE.Vector4(248 / 255, 225 / 255, 5 / 255, 1.0)
+  // ]
+
+  // let gradient = (this.leftColors.length * Math.random()) >> 0;
+
+  // this.material = new THREE.ShaderMaterial( {
+  //   uniforms: {
+  //     time              : {type: 'f', value: 0},
+  //     color             : {type: 'c', value: new THREE.Color(0xffffff) },
+  //     power             : {type: 'f', value: 0},
+  //     radius            : {type: 'f', value: this.radius},
+  //     displacementPower : {type: 'f', value: this.radius},
+  //     resolution        : {type: 'v2', value: new THREE.Vector2(window.innerWidth,window.innerHeight)},
+  //     mouse             : {type: 'v2', value: new THREE.Vector2(0,0)},
+  //     showTexture       : {type: 'i', value: Number(this.showTexture)},
+  //     gradientsLeft     : {type : 'v4', value : this.leftColors[gradient]},
+  //     gradientsRight    : {type : 'v4', value : this.rightColors[gradient]}
+  //   },
+  //   side : THREE.DoubleSide,
+  //   wireframe      : true,
+  //   vertexShader   : glslify('./shader/vertex.vert'),
+  //   fragmentShader : glslify('./shader/frag.frag')
+
+  // } );
+
+  // // this.addPlanes();
+
+  // this.loader = new THREE.OBJLoader();
+  // this.loader.load('static/r.obj', this.onLoaded.bind(this));
+
+// onLoaded(obj)
+// {
+//   let bgeo = obj.children[0].geometry;
+//   let scl = window.innerWidth > window.innerHeight ? .7 : .4;
+//   bgeo.scale(scl, scl, scl);
+
+//   let nv = bgeo.attributes.position.array.length;
+//   let p = new Float32Array(nv);
+//   bgeo.addAttribute('duration', new THREE.BufferAttribute(p, 1));
+
+//   this.objectMesh = new THREE.Mesh(bgeo, this.material);
+//   this.objectMesh.position.x = window.innerWidth > window.innerHeight ? 40 : 15;
+//   this.objectMesh.position.y = window.innerWidth > window.innerHeight ? -40 : -20;
+
+//   this.scene.add(this.objectMesh);
+// }
+
+// addPlanes()
+// {
+//   if(this.golContainer) this.removeAll();
+//   this.golContainer = new THREE.Object3D();
+
+//   let vmax = Math.max(window.innerWidth, window.innerHeight);
+//   let vmin = Math.min(window.innerWidth, window.innerHeight);
+
+//   let boxSize = (vmax / vmin) * this.planeSize >> 0;
+//   let resX = Utils.round(vmax / boxSize);
+//   let offset = (boxSize + (boxSize * (this.planeSize / 10000)))
+//   let totalWidth = offset * resX / 2;
+
+//   this.world = new GoL(resX);
+//   this.boxes = [];
+//   let counter = 0;
+
+//   this.geo = new THREE.PlaneBufferGeometry(boxSize, boxSize);
+
+//   for (var x = 0; x < resX; x++) {
+//       for (var y = 0; y < resX; y++) {
+//           var b = new THREE.Mesh(this.geo, this.shapeMaterial);
+//           b.position.x = totalWidth - (x * offset);
+//           b.position.y = totalWidth - (y * offset);
+//           this.golContainer.add(b)
+//           this.boxes.push(b);
+//           counter++;
+//       }
+//   };
+
+//   this.scene.add(this.golContainer);
+// }
+
+// removeAll()
+// {
+//   for (var i = this.boxes.length - 1; i >= 0; i--) {
+//       this.golContainer.remove(this.boxes[i]);
+//   };
+
+//   this.scene.remove(this.golContainer);
+// }
+
+// startGUI()
+// {
+//   return;
+//   var gui = new dat.GUI()
+//   gui.add(this, 'wireframe');
+
+//   // gui.add(this, 'showGameOfLife').onChange(this.addPlanes.bind(this));
+//   // gui.add(this, 'planeSize', 50, 300).onChange(this.addPlanes.bind(this));
+//   gui.add(this, 'showTexture');
+//   gui.add(this, 'radius', 1, 500);
+//   gui.add(this, 'displacementPower', 1, 10);
+// }
 
 // this.activeGOL = [];
 

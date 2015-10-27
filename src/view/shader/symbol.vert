@@ -8,6 +8,7 @@ uniform int type;
 uniform float progress;
 uniform int mode;
 uniform float rotation;
+uniform float wobbling;
 
 varying vec3 vPosition;
 
@@ -75,10 +76,10 @@ void main () {
 	}
 
 	//add some oscilation
-	float amount = 2.0;
+	float amount = 1.5;
 	float freq = time * 2.0 + dPos.x * .1;
-	dPos.y += sin( freq ) * amount;
-	dPos.x += cos( freq ) * amount;
+	dPos.y += sin( freq ) * amount * wobbling;
+	dPos.x += cos( freq ) * amount * wobbling;
 
 	vec4 mvPosition = modelViewMatrix * vec4( dPos, 1.0 );
 
