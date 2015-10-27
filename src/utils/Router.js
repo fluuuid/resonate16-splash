@@ -4,7 +4,7 @@ class Router  {
 
   start()
   {
-    page.base(window.location.port == "" ? "/dist" : "");
+    page.base(window.BASE_PATH);
     page("/", this.pageHandler.bind(this));
     page(this.pageHandler.bind(this));
     page();

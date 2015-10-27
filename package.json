@@ -14,7 +14,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "budo --dir dist/ src/index.js:js/bundle.js --live -- -t babelify -t glslify | garnish",
     "build": "browserify -t babelify -t glslify src/index.js | uglifyjs -cm > dist/js/bundle.js",
-    "deploy": "dploy resonate_staging"
+    "deploy": "npm run build && dploy resonate_staging"
   },
   "devDependencies": {
     "babelify": "^6.3.0",
