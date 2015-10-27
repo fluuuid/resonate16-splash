@@ -49,7 +49,7 @@
     </style>
 
     <script type="text/javascript">
-        window.BASE_PATH = window.location.port == "" ? window.location.hostname === "resonate.io" ? "_2016" : "dist" : "";
+        window.BASE_PATH = window.location.port == "" ? window.location.hostname.indexOf("resonate.io") > -1 ? "/_2016" : "/dist" : "";
         window.PHOTOS = [
             "01.jpg",
             "03.jpg",
