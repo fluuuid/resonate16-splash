@@ -113,8 +113,22 @@ class InteractiveLayer {
     let dt = this.clock.getDelta();
     let time = this.clock.getElapsedTime();
 
+    if ( !this.logo.ready ) {
+      if ( this.logo.logo1 && this.logo.logo2 && this.logo.logo3 ) {
+        this.logo.ready = true;
+        this.logo.logo1.visible = true
+        this.logo.logo2.visible = true
+        this.logo.logo3.visible = true
+        TweenLite.to( this.logo.logo1.material.uniforms.progress, 6, { value: 1 })
+        TweenLite.to( this.logo.logo2.material.uniforms.progress, 6, { value: 1 })
+        TweenLite.to( this.logo.logo3.material.uniforms.progress, 6, { value: 1 })
+      }
+    }
+
     this.generator.update(time * .001);
-    if(this.logo.logo) this.logo.logo.material.uniforms.time.value = time ;
+    if(this.logo.logo1) this.logo.logo1.material.uniforms.time.value = time ;
+    if(this.logo.logo2) this.logo.logo2.material.uniforms.time.value = time ;
+    if(this.logo.logo3) this.logo.logo3.material.uniforms.time.value = time ;
 
     this.renderer.render(this.scene, this.camera);
 
@@ -139,8 +153,8 @@ class InteractiveLayer {
     if(this.logo.logo)
     {
       let scl = this.generator.grid.cellSize * 4 / 100;
-      this.logo.logo.scale.set( scl, scl, scl);
-      this.logo.logo.position.x = scl * 2.5;
+      this.logo.container.scale.set( scl, scl, scl);
+      this.logo.container.position.x = scl * 2.5;
     }
           
 

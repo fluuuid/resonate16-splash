@@ -5,11 +5,15 @@ uniform vec3 color2;
 
 uniform float progress;
 uniform int mode;
+uniform int gradientMode;
 
 varying vec3 vPosition;
 
 void main () {
 	float p = (vPosition.x + 50.0) / 100.0;
+	if ( gradientMode == 1 ) {
+		p = (vPosition.y + 50.0) / 100.0;
+	}
 	vec3 color = mix( color1, color2, p );
 	//gl_FragColor = vec4( 1.0 );
 	float alpha = 1.0;

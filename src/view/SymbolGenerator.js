@@ -59,6 +59,10 @@ SymbolGenerator = (function() {
         wobbling: {
           type: 'f',
           value: 1
+        },
+        gradientMode: {
+          type: 'i',
+          value: 0
         }
       }
     });
