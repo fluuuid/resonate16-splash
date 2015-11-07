@@ -296,11 +296,14 @@ header div.container
     z-index: 30;
     transform: rotateZ(0);
     -webkit-transform: rotateZ(0);
+    text-shadow: 0px 0px 1px #666;
 }
 
 header div.container > p
 {
     padding: 0 10%;
+    max-width: 600px;
+    margin: 0 auto;
 }
 
 header div.container > p > a
