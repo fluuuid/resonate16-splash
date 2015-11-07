@@ -26,6 +26,9 @@ html, body
     text-rendering: optimizeLegibility !important;
     -webkit-font-smoothing: antialiased !important;
     -moz-osx-font-smoothing: grayscale;
+
+    width: 100vw;
+    overflow-x: hidden;
 }
 
 ::-moz-selection { background: #b49dc9; }
@@ -85,7 +88,7 @@ nav
 nav > div
 {
     padding: 10px;
-    width: 50%;
+    width: 50vw;
 }
 
 nav > div.menu { text-align: right; }
@@ -134,7 +137,7 @@ nav > div.burger
     nav > div 
     {
         padding: 10px;
-        width: 100%;
+        width: 100vw;
     }
 
     nav > div.burger
@@ -188,7 +191,7 @@ header
 {
     background-color: black;
     height: 100vh;
-    width: 100%;
+    width: 100vw;
 }
 
 header div.gallery
@@ -196,7 +199,7 @@ header div.gallery
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 100vw;
     height: 100vh;
     z-index: 1;
     opacity: 0;
@@ -206,13 +209,13 @@ header div.gallery
 
 .Wallop-list
 {
-    width: 100%;
+    width: 100vw;
     height: 100vh;
 }
 
 .Wallop-item
 {
-    width: 100%;
+    width: 100vw;
     height: 100vh;
     background-size: cover;
     background-position: center;
@@ -237,7 +240,7 @@ header div.gallery
 .Wallop-buttonNext
 {
     position: absolute;
-    top: 50%;
+    top: 50vw;
     right: 10px;
     z-index: 100;
     transform: translateY(-50%) rotate(-90deg);
@@ -303,6 +306,7 @@ header div.container > p
 header div.container > p > a
 {
     color: white;
+    /*border-bottom: 1px solid white;*/
 }
 
 header div.container > p > a:hover
@@ -318,7 +322,7 @@ header div.container > p > a:hover
 
 header div.container > img.logo 
 {
-    width: 50vw;
+    width: 50%;
     padding-bottom: 5vh;
 }
 
