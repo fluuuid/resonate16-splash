@@ -493,6 +493,12 @@ section.tickets > div.grid > div > p.old-price
     text-decoration: line-through;   
 }
 
+section.tickets > div.grid > div > span.sold-out {
+    background: #aaa;
+    color: #666;
+    padding: 10px;
+}
+
 section.tickets > div.grid > div > p.full-price
 {
     color: #62318d;
